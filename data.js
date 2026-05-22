@@ -254,7 +254,7 @@ window.PATCH_DATA = {
       name: "Pathfinder",
       cls: "Ranger",
       mark: "P",
-      classIcon: "ui/IconDexFour_Ranger2",
+      classIcon: "ui/IconDexFour_Ranger3",
       changes: [
         { name: "Overwhelming Toxicity", desc: "Less Poison Duration.", chip: { kind: "nerf", from: "35% less", to: "50% less" } },
         { name: "Running Assault", desc: "Less Movement Speed Penalty from using Skills while moving.", chip: { kind: "nerf", from: "50% less", to: "30% less" } }
