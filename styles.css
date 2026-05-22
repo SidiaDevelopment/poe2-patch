@@ -1460,6 +1460,27 @@ a:hover {
   border: 1px solid var(--rule);
   position: relative;
   transition: border-color 200ms;
+  display: flex;
+  flex-direction: column;
+}
+.legacy-tile.has-img {
+  flex-direction: row;
+  gap: 14px;
+  align-items: flex-start;
+}
+.legacy-tile.has-img .legacy-body { flex: 1; min-width: 0; }
+.legacy-img {
+  flex-shrink: 0;
+  width: 64px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 2px;
+}
+.legacy-img img {
+  max-width: 64px;
+  max-height: 96px;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.45));
 }
 .legacy-tile.high { border-color: rgba(185, 122, 60, 0.6); }
 .legacy-tile.low { border-style: dashed; }

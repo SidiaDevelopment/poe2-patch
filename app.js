@@ -168,7 +168,9 @@
       const now = Date.now();
       const diff = target - now;
       cdRoot.innerHTML = "";
-      cdRoot.appendChild(el("div", { class: "hero-countdown-label" }, D.launch.label));
+      cdRoot.appendChild(el("div", { class: "hero-countdown-label" },
+        D.launch.label + (D.launch.localHint ? "  ·  " + D.launch.localHint : "")
+      ));
 
       if (diff <= 0) {
         cdRoot.classList.add("live");
@@ -350,13 +352,11 @@
     card.appendChild(head);
     const cl = changeLines(s.chips);
     if (cl) card.appendChild(cl);
-    if (s.flag) card.appendChild(flagIcon(s.flag));
     card.appendChild(el("span", { class: "skill-expand-hint" }, "click for verbatim"));
     card.addEventListener("click", () => openModal({
       title: s.name,
       sub: s.tag,
       bullets: s.notes,
-      flag: s.flag,
       links: [
         { href: poe2dbLink(s.name), label: "poe2db ↗" },
       ]
@@ -511,17 +511,16 @@
 
   function legacyTile(u, bucketClass) {
     const isLegacy = !!u.legacy;
-    // For confirmed PoE1 ancestors, use the PoE1 wiki's image URL as a hint.
-    // poewiki.net uses MediaWiki: /images/?/??/<File>_inventory_icon.png
-    // We don't know the hash prefix, so use Special:FilePath which redirects.
-    const imgUrl = isLegacy ? wikiInventoryIcon(u.name) : null;
-    const tile = el("div", { class: "legacy-tile " + bucketClass },
+    // Image only when explicitly known (probed via poecdn). No guessing.
+    const imgUrl = isLegacy && u.legacy.image ? u.legacy.image : null;
+    const tile = el("div", { class: "legacy-tile " + bucketClass + (imgUrl ? " has-img" : "") },
       imgUrl
         ? el("div", { class: "legacy-img" },
             el("img", {
               src: imgUrl,
-              alt: u.name + " (PoE1 inventory icon)",
+              alt: u.name,
               loading: "lazy",
+              referrerpolicy: "no-referrer",
               onerror: function () { this.parentNode.style.display = "none"; }
             })
           )
@@ -539,13 +538,6 @@
       )
     );
     return tile;
-  }
-
-  // poewiki.net inventory icon via Special:FilePath (handles the file-hash redirect).
-  function wikiInventoryIcon(name) {
-    // common naming: "<Name>_inventory_icon.png" — Special:FilePath/<Name> inventory icon.png
-    const fname = name.replace(/ /g, "_") + "_inventory_icon.png";
-    return "https://www.poewiki.net/wiki/Special:FilePath/" + encodeURIComponent(fname);
   }
 
   renderUniques("reworks");
@@ -623,11 +615,10 @@
   const modal = document.getElementById("modal");
   const modalContent = document.getElementById("modal-content");
 
-  function openModal({ title, sub, bullets, flag, links }) {
+  function openModal({ title, sub, bullets, links }) {
     modalContent.innerHTML = "";
     modalContent.appendChild(el("h2", null, title));
     if (sub) modalContent.appendChild(el("div", { class: "modal-sub" }, sub));
-    if (flag) modalContent.appendChild(el("div", { style: "margin-top:8px;" }, chip({ kind: "flag", text: "⚑ " + flag })));
     if (bullets && bullets.length) {
       modalContent.appendChild(el("ul", null, ...bullets.map(b => el("li", null, b))));
     }

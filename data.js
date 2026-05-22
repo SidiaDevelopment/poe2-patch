@@ -31,12 +31,11 @@ window.PATCH_DATA = {
   ],
 
   // ---------- LAUNCH COUNTDOWN ----------
-  // GGG hasn't published the exact launch time in the summary; this is an
-  // educated default of 20:00 UTC on the patch date. Shown as such in Sources.
+  // Launch: 2026-05-29 at 1 PM PDT (UTC-7) → 20:00 UTC.
   launch: {
-    iso: "2026-05-22T20:00:00Z",
+    iso: "2026-05-29T20:00:00Z",
     label: "Runes of Aldur launches",
-    notice: "Assumed launch time — verify against the official thread.",
+    localHint: "29 May 2026 · 1:00 PM PDT",
   },
 
   // ---------- MAJOR CONTENT PILLARS ----------
@@ -192,7 +191,7 @@ window.PATCH_DATA = {
       classIcon: "ui/IconDexIntFourb_Monk2",
       isNew: true,
       changes: [
-        { name: "New Ascendancy", desc: "Specialises in illusions and hand-to-hand combat. (Full node-by-node list not enumerated in the patch summary — verify on the official notes.)", chip: { kind: "flag", text: "⚑ summary only" } }
+        { name: "New Ascendancy", desc: "Specialises in illusions and hand-to-hand combat. Full node list not in the patch summary." }
       ]
     },
     {
@@ -202,7 +201,7 @@ window.PATCH_DATA = {
       classIcon: "ui/IconDexFourb_Huntress2",
       isNew: true,
       changes: [
-        { name: "New Ascendancy", desc: "Commands animal spirits — Stag, Owl and Bear. (Full node-by-node list not enumerated in the patch summary — verify on the official notes.)", chip: { kind: "flag", text: "⚑ summary only" } }
+        { name: "New Ascendancy", desc: "Commands animal spirits — Stag, Owl and Bear. Full node list not in the patch summary." }
       ]
     },
     {
@@ -280,7 +279,7 @@ window.PATCH_DATA = {
     { name: "Bonestorm",       tag: "Witch · Bone",         kind: "neutral", icon: "WitchBoneStorm", chips: [{kind:"neutral", text:"Sustained tag removed"}], notes: ['Removed Sustained tag.'] },
     { name: "Boneshatter",     tag: "Warrior · Mace",       kind: "nerf",    icon: "BruteBoneshatter", chips: [{kind:"nerf", text:"Quality AS", from:"0–30%", to:"0–20%"}], notes: ['Quality now grants 0–20% increased Attack Speed (was 0–30%).'] },
     { name: "Comet",           tag: "Sorceress · Cold",     kind: "nerf",    icon: "SorceressComet", chips: [{kind:"nerf", text:"Gem 11 dmg", from:"223–335", to:"212–318"}, {kind:"nerf", text:"Gem 20 dmg", from:"829–1243", to:"787–1181"}], notes: ['Gem 11 Cold Damage 223–335 → 212–318.', 'Gem 20 787–1181 (was 829–1243).', 'Fire-Infused variant adjusted similarly.'] },
-    { name: "Cull the Weak",   tag: "Warrior · Frenzied Lunge?", kind: "buff",    icon: "FrenziedLungeSkillIcon", flag: "Icon mapping flagged — poe2db returned 'FrenziedLungeSkillIcon' for this name. Possibly a renamed skill.", chips: [{kind:"buff", text:"Attack Dmg", from:"60–156%", to:"109–281%"}, {kind:"buff", text:"Atk Speed", from:"60%", to:"75%"}, {kind:"buff", text:"Mana", from:"9–46", to:"8–42"}, {kind:"buff", text:"Dash range", from:"+0%", to:"+15%"}, {kind:"buff", text:"Can't be Evaded"}], notes: ['Now Can\'t be Evaded.', 'Damage 109–281% of Attack Damage (was 60–156%).', 'Attack speed 75% base (was 60%).', 'Mana cost 8–42 (was 9–46).', 'Dash range +15%.'] },
+    { name: "Cull the Weak",   tag: "Warrior", kind: "buff",    icon: "FrenziedLungeSkillIcon", chips: [{kind:"buff", text:"Attack Dmg", from:"60–156%", to:"109–281%"}, {kind:"buff", text:"Atk Speed", from:"60%", to:"75%"}, {kind:"buff", text:"Mana", from:"9–46", to:"8–42"}, {kind:"buff", text:"Dash range", from:"+0%", to:"+15%"}, {kind:"buff", text:"Can't be Evaded"}], notes: ['Now Can\'t be Evaded.', 'Damage 109–281% of Attack Damage (was 60–156%).', 'Attack speed 75% base (was 60%).', 'Mana cost 8–42 (was 9–46).', 'Dash range +15%.'] },
     { name: "Defiance / Dread / War Banner", tag: "Banner", kind: "buff", icon: "DefianceBannerSkill", chips: [{kind:"buff", text:"MS penalty removed"}, {kind:"buff", text:"Radius", from:"4.5m", to:"6m"}], notes: ['Removed Movement Speed penalty.', 'Banner radius 6m (was 4.5m).'] },
     { name: "Earthquake",      tag: "Warrior · Slam",       kind: "buff",    icon: "BruteEarthquake", chips: [{kind:"buff", text:"Aftershock", from:"160–580%", to:"184–666%"}], notes: ['Aftershock deals 184–666% of Attack Damage (was 160–580%).'] },
     { name: "Eternal Rage",    tag: "Buff",                  kind: "neutral", icon: "CeaselessRageSkill", chips: [{kind:"neutral", text:"must activate in both weapon sets"}], notes: ['Must activate in both weapon sets; fails if impossible.'] },
@@ -465,17 +464,18 @@ window.PATCH_DATA = {
   // Everything else goes into "no PoE1 match" — no theme assumptions made.
   newUniques: [
     // -- PoE1 ancestor found (HTTP 200 on poewiki.net for the exact name) --
-    { name: "Berek's Grip",           legacy: { slot: "Two-Stone Ring (Cold/Lightning)", note: "PoE1: Domination/Nemesis league-specific. Grants damage leech vs. Shocked/Frozen." } },
-    { name: "Berek's Pass",           legacy: { slot: "Two-Stone Ring (Fire/Cold)", note: "PoE1: 5000 Armour while Frozen, damage while Ignited." } },
-    { name: "Berek's Respite",        legacy: { slot: "Two-Stone Ring (Fire/Lightning)", note: "PoE1: Killing Shocked/Ignited enemies spreads the ailment." } },
+    // image: poecdn.com inventory icon URLs probed directly.
+    { name: "Berek's Grip",           legacy: { slot: "Two-Stone Ring (Cold/Lightning)", note: "PoE1: Domination/Nemesis league-specific. Grants damage leech vs. Shocked/Frozen.", image: "https://web.poecdn.com/image/Art/2DItems/Rings/BereksGrip.png" } },
+    { name: "Berek's Pass",           legacy: { slot: "Two-Stone Ring (Fire/Cold)", note: "PoE1: 5000 Armour while Frozen, damage while Ignited.", image: "https://web.poecdn.com/image/Art/2DItems/Rings/BereksPass.png" } },
+    { name: "Berek's Respite",        legacy: { slot: "Two-Stone Ring (Fire/Lightning)", note: "PoE1: Killing Shocked/Ignited enemies spreads the ailment.", image: "https://web.poecdn.com/image/Art/2DItems/Rings/BereksRespite.png" } },
     { name: "Brutus' Lead Sprinkler", legacy: { slot: "Sceptre (Ritual)", note: "PoE1: Brutus-themed boss-drop." } },
     { name: "Duality",                legacy: { slot: "Unknown · verify on poewiki", note: "PoE1 page exists for this name — confirm whether it's the same item." } },
     { name: "Facebreaker",            legacy: { slot: "Gloves (Strapped Mitts)", note: "PoE1: classic unarmed-build staple." } },
     { name: "Geofri's Sanctuary",     legacy: { slot: "Body Armour (Elegant Ringmail)", note: "PoE1: grants Zealot's Oath keystone." } },
-    { name: "Loreweave",              legacy: { slot: "Body Armour (Elegant Ringmail)", note: "PoE1: max-resists rolling unique." } },
-    { name: "Mageblood",              legacy: { slot: "Heavy Belt", note: "PoE1: iconic top-tier belt; magic flask effects." } },
+    { name: "Loreweave",              legacy: { slot: "Body Armour (Elegant Ringmail)", note: "PoE1: max-resists rolling unique.", image: "https://web.poecdn.com/image/Art/2DItems/Armours/BodyArmours/Loreweave.png" } },
+    { name: "Mageblood",              legacy: { slot: "Heavy Belt", note: "PoE1: iconic top-tier belt; magic flask effects.", image: "https://web.poecdn.com/image/Art/2DItems/Belts/InjectorBelt.png" } },
     { name: "Redemption",             legacy: { slot: "Unknown · verify on poewiki", note: "PoE1 page exists for this name — confirm whether it's the same item." } },
-    { name: "Split Personality",      legacy: { slot: "Jewel", note: "PoE1: Cobalt Jewel; attribute trade-off based on positioning." } },
+    { name: "Split Personality",      legacy: { slot: "Cobalt Jewel", note: "PoE1: attribute trade-off based on socket positioning." } },
     { name: "Voices",                 legacy: { slot: "Large Cluster Jewel", note: "PoE1: splits passive small nodes." } },
 
     // -- No PoE1 entry found (poewiki returned 404 for the exact name) --
