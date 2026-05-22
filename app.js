@@ -12,9 +12,10 @@
   function iconUrl(icon) {
     if (!icon) return null;
     if (icon.startsWith("http")) return icon;
-    if (icon.startsWith("4k/")) return "https://cdn.poe2db.tw/image/art/2dart/skillicons/" + icon + ".webp";
-    if (icon.startsWith("s/"))  return "https://cdn.poe2db.tw/image/art/2dart/skillicons/support/" + icon.slice(2) + "support.webp";
-    if (icon.startsWith("ui/")) return "https://cdn.poe2db.tw/image/Art/2DArt/UIImages/Common/" + icon.slice(3) + ".webp";
+    if (icon.startsWith("4k/"))  return "https://cdn.poe2db.tw/image/art/2dart/skillicons/" + icon + ".webp";
+    if (icon.startsWith("s/"))   return "https://cdn.poe2db.tw/image/art/2dart/skillicons/support/" + icon.slice(2) + "support.webp";
+    if (icon.startsWith("ui/"))  return "https://cdn.poe2db.tw/image/Art/2DArt/UIImages/Common/" + icon.slice(3) + ".webp";
+    if (icon.startsWith("gem/")) return "https://cdn.poe2db.tw/image/Art/2DItems/Gems/New/" + icon.slice(4) + ".webp";
     return "https://cdn.poe2db.tw/image/Art/2DArt/SkillIcons/" + icon + ".webp";
   }
 
@@ -235,15 +236,41 @@
 
   // ---------- ASCENDANCIES ----------
   const ascRoot = document.getElementById("ascendancy-grid");
+
+  // Small qualitative tags that we still surface as a badge after the change name.
+  // Anything with from/to gets inlined inside the description instead.
+  function ascBadge(c) {
+    if (!c || !c.text || c.from) return null;
+    const kindCls =
+      c.kind === "buff" ? "asc-badge buff" :
+      c.kind === "nerf" ? "asc-badge nerf" :
+      "asc-badge rework";
+    return el("span", { class: kindCls }, c.text);
+  }
+
+  function ascDesc(c) {
+    const node = el("div", { class: "asc-change-desc" });
+    node.appendChild(document.createTextNode(c.desc));
+    if (c.chip && c.chip.from && c.chip.to) {
+      node.appendChild(document.createTextNode("  "));
+      node.appendChild(el("span", { class: "val val-was" }, c.chip.from));
+      node.appendChild(el("span", { class: "val-arrow" }, " → "));
+      const k = c.chip.kind;
+      const cls = k === "buff" ? "val val-up" : k === "nerf" ? "val val-down" : "val val-rework";
+      node.appendChild(el("span", { class: cls }, c.chip.to));
+    }
+    return node;
+  }
+
   D.ascendancies.forEach(a => {
     const list = el("ul", { class: "asc-changes" },
       ...a.changes.map(c =>
         el("li", { class: "asc-change" },
-          el("div", null,
+          el("div", { class: "asc-change-row" },
             el("div", { class: "asc-change-name" }, c.name),
-            el("div", { class: "asc-change-desc" }, c.desc)
+            ascBadge(c.chip)
           ),
-          c.chip ? chip(c.chip) : null
+          ascDesc(c)
         )
       )
     );
@@ -263,7 +290,13 @@
     const markEl = classIconUrl
       ? el("span", { class: "asc-mark asc-mark-img" },
           el("img", { src: classIconUrl, alt: a.cls, loading: "lazy",
-            onerror: function () { this.parentNode.textContent = a.mark; this.parentNode.classList.remove("asc-mark-img"); } })
+            onerror: function () {
+              const p = this.parentNode;
+              if (!p) return;
+              p.classList.remove("asc-mark-img");
+              p.textContent = a.mark;
+            }
+          })
         )
       : el("span", { class: "asc-mark" }, a.mark);
     ascRoot.appendChild(
@@ -333,6 +366,7 @@
         src: iurl,
         alt: s.name,
         loading: "lazy",
+        referrerpolicy: "no-referrer",
         onerror: function () { this.style.display = "none"; iconBox.appendChild(el("span", { class: "icon-fallback" }, s.name[0])); }
       });
       iconBox.appendChild(img);
@@ -388,7 +422,7 @@
     const iurl = iconUrl(s.icon);
     if (iurl) {
       const img = el("img", {
-        src: iurl, alt: s.name, loading: "lazy",
+        src: iurl, alt: s.name, loading: "lazy", referrerpolicy: "no-referrer",
         onerror: function () { this.style.display = "none"; iconBox.appendChild(el("span", { class: "icon-fallback" }, s.name[0])); }
       });
       iconBox.appendChild(img);
@@ -441,14 +475,7 @@
     if (tab === "reworks") {
       D.uniqueReworks.forEach(u => {
         const overall = cardKindClass(u.chips).replace("has-", "");
-        uniquesRoot.appendChild(
-          el("article", { class: "unique-card" },
-            kindMark(overall),
-            el("h3", { class: "unique-name" }, u.name),
-            u.desc ? el("p", null, u.desc) : null,
-            changeLines(u.chips)
-          )
-        );
+        uniquesRoot.appendChild(reworkCard(u, overall));
       });
     } else if (tab === "vaal") {
       D.vaalRolls.forEach(u => {
@@ -465,6 +492,32 @@
     } else if (tab === "new") {
       renderNewUniques();
     }
+  }
+
+  function reworkCard(u, overall) {
+    const card = el("article", { class: "unique-card" + (u.image ? " has-img" : "") },
+      kindMark(overall)
+    );
+    if (u.image) {
+      const imgUrl = "https://cdn.poe2db.tw/image/Art/2DItems/" + u.image + ".webp";
+      const imgBox = el("div", { class: "unique-img" },
+        el("img", {
+          src: imgUrl,
+          alt: u.name,
+          loading: "lazy",
+          referrerpolicy: "no-referrer",
+          onerror: function () { this.parentNode.style.display = "none"; card.classList.remove("has-img"); }
+        })
+      );
+      card.appendChild(imgBox);
+    }
+    const body = el("div", { class: "unique-body" },
+      el("h3", { class: "unique-name" }, u.name),
+      u.desc ? el("p", null, u.desc) : null,
+      changeLines(u.chips)
+    );
+    card.appendChild(body);
+    return card;
   }
 
   function renderNewUniques() {

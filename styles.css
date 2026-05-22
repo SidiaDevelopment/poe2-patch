@@ -725,24 +725,65 @@ a:hover {
 }
 .asc-changes { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
 .asc-change {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 10px;
-  align-items: baseline;
   padding-bottom: 9px;
   border-bottom: 1px dashed var(--rule);
 }
 .asc-change:last-child { border-bottom: none; }
+.asc-change-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 2px;
+}
 .asc-change-name {
   font-family: var(--font-headline);
   font-weight: 600;
   color: var(--gilt-bright);
+  flex: 1;
+  min-width: 0;
 }
 .asc-change-desc {
   font-size: 16px;
   color: var(--vellum-dim);
   margin-top: 2px;
 }
+/* Small qualitative tag (new / moved / reworked / removed) shown after the change name. */
+.asc-badge {
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+.asc-badge.buff   { color: #7ad17a; }
+.asc-badge.nerf   { color: #e26666; }
+.asc-badge.rework { color: var(--gilt-bright); }
+
+/* Unique cards: optional inventory icon on the left, width-capped, free height. */
+.unique-card.has-img {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 14px;
+  align-items: flex-start;
+}
+.unique-img {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 2px;
+}
+.unique-img img {
+  width: 56px;
+  height: auto;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.55));
+}
+.unique-card.has-img .unique-body { min-width: 0; }
+.unique-card.has-img .unique-name { margin-top: 0; }
 
 /* ---------- skills ---------- */
 .skills-controls {
@@ -902,9 +943,11 @@ a:hover {
 /* ---------- supports ---------- */
 .support-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
+@media (max-width: 980px) { .support-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .support-grid { grid-template-columns: 1fr; } }
 .support-card {
   padding: 14px 16px;
   background: rgba(20, 14, 10, 0.6);
@@ -1022,8 +1065,11 @@ a:hover {
 }
 .uniques-content {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
+}
+@media (max-width: 720px) {
+  .uniques-content { grid-template-columns: 1fr; }
 }
 .unique-card {
   padding: 16px 18px;
