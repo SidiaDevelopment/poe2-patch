@@ -1366,8 +1366,38 @@ a:hover {
   line-height: 1.6;
 }
 .changes li .val-tag { display: inline-block; }
-.changes .ch-add::before    { content: "▲ "; color: #6db86d; font-size: 10px; margin-right: 4px; }
-.changes .ch-rem::before    { content: "▼ "; color: var(--crimson); font-size: 10px; margin-right: 4px; }
+.changes .ch-add::before    {
+  content: "NEW";
+  display: inline-block;
+  background: linear-gradient(180deg, rgba(47, 102, 48, 0.55), rgba(20, 50, 22, 0.7));
+  color: #b6dab1;
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  padding: 1px 6px;
+  border-radius: 2px;
+  margin-right: 8px;
+  border: 1px solid var(--emerald-deep);
+  box-shadow: 0 0 6px var(--emerald-glow);
+  vertical-align: 2px;
+}
+.changes .ch-rem::before    {
+  content: "NEW";
+  display: inline-block;
+  background: linear-gradient(180deg, rgba(122, 31, 31, 0.55), rgba(60, 14, 14, 0.7));
+  color: #efb1b1;
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  padding: 1px 6px;
+  border-radius: 2px;
+  margin-right: 8px;
+  border: 1px solid var(--crimson-deep);
+  box-shadow: 0 0 6px var(--crimson-glow);
+  vertical-align: 2px;
+}
 .changes .ch-rework::before { content: "↻ "; color: var(--gilt); font-size: 11px; margin-right: 4px; }
 
 /* Skill card adjustments (position relative for badge, no chip wall) */
