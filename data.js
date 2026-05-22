@@ -215,9 +215,9 @@ window.PATCH_DATA = {
     },
     {
       name: "Blood Mage",
-      cls: "Sorceress",
+      cls: "Witch",
       mark: "B",
-      classIcon: "ui/IconIntFourb_Sorceress2",
+      classIcon: "ui/IconIntFour_Witch2",
       changes: [
         { name: "Vitality Siphon", desc: "Spell Damage leeched as Life.", chip: { kind: "buff", from: "10%", to: "20%" } }
       ]
@@ -448,13 +448,13 @@ window.PATCH_DATA = {
 
   // ---------- VAAL CULTIVATION ROLLS ----------
   vaalRolls: [
-    { name: "Atziri's Rule (Unique Staff)", chips: [{kind:"nerf", text:"Life Cost Eff", from:"20–40%", to:"10–20%"}], desc: 'Vaal-rolled Life Cost Efficiency: 10–20% (was 20–40%).' },
-    { name: "Atziri's Splendour (Unique Body)", chips: [{kind:"nerf", text:"Max ES", from:"+100–200", to:"+66–100"}], desc: 'Vaal-rolled +Max ES: +66–100 (was +100–200).' },
-    { name: "The Covenant (Unique Body)", chips: [{kind:"nerf", text:"Life Cost Eff", from:"25–50%", to:"10–25%"}], desc: 'Vaal-rolled Life Cost Efficiency: 10–25% (was 25–50%).' },
-    { name: "Hateforge (Unique Gloves)", chips: [{kind:"buff", text:"new Vaal roll"}], desc: 'Vaal-rolled +16–30 Max Rage if you used a Glory skill in past 20s.' },
-    { name: "Rathpith Globe (Unique Focus)", chips: [{kind:"nerf", text:"Life Cost Eff", from:"12–20%", to:"8–15%"}], desc: 'Vaal-rolled Life Cost Efficiency: 8–15% (was 12–20%).' },
-    { name: "Shackles of the Wretched (Unique Gloves)", chips: [{kind:"neutral", text:"reworked"}], desc: 'No longer rolls Elemental Ailments other than Freeze. Now rolls 10–15% increased Damage per Curse on you.' },
-    { name: "The Vertex (Unique Helmet)", chips: [{kind:"neutral", text:"reworked"}], desc: 'No longer rolls +2–4 All Skill Gem Levels. Now rolls +3–5 to Level of All Curse Skill Gems.' },
+    { name: "Atziri's Rule (Unique Staff)", image: "Weapons/TwoHandWeapons/Staves/Uniques/AtziriStaff", chips: [{kind:"nerf", text:"Life Cost Eff", from:"20–40%", to:"10–20%"}], desc: 'Vaal-rolled Life Cost Efficiency: 10–20% (was 20–40%).' },
+    { name: "Atziri's Splendour (Unique Body)", image: "Armours/BodyArmours/Uniques/AtzirisSplendour", chips: [{kind:"nerf", text:"Max ES", from:"+100–200", to:"+66–100"}], desc: 'Vaal-rolled +Max ES: +66–100 (was +100–200).' },
+    { name: "The Covenant (Unique Body)", image: "Armours/BodyArmours/Uniques/TheCovenant", chips: [{kind:"nerf", text:"Life Cost Eff", from:"25–50%", to:"10–25%"}], desc: 'Vaal-rolled Life Cost Efficiency: 10–25% (was 25–50%).' },
+    { name: "Hateforge (Unique Gloves)", image: "Armours/Gloves/Uniques/Hateforge", chips: [{kind:"buff", text:"new Vaal roll"}], desc: 'Vaal-rolled +16–30 Max Rage if you used a Glory skill in past 20s.' },
+    { name: "Rathpith Globe (Unique Focus)", image: "Offhand/Foci/Uniques/RathpithGlobe", chips: [{kind:"nerf", text:"Life Cost Eff", from:"12–20%", to:"8–15%"}], desc: 'Vaal-rolled Life Cost Efficiency: 8–15% (was 12–20%).' },
+    { name: "Shackles of the Wretched (Unique Gloves)", image: "Armours/Gloves/Uniques/ShacklesOfTheWretched", chips: [{kind:"neutral", text:"reworked"}], desc: 'No longer rolls Elemental Ailments other than Freeze. Now rolls 10–15% increased Damage per Curse on you.' },
+    { name: "The Vertex (Unique Helmet)", image: "Armours/Helmets/Uniques/TheVertex", chips: [{kind:"neutral", text:"reworked"}], desc: 'No longer rolls +2–4 All Skill Gem Levels. Now rolls +3–5 to Level of All Curse Skill Gems.' },
   ],
 
   // ---------- NEW UNIQUES ----------

@@ -6,17 +6,15 @@
   const D = window.PATCH_DATA;
 
   // ---------- icon URL builder ----------
-  // - "4k/foo"  -> https://cdn.poe2db.tw/image/art/2dart/skillicons/4k/foo.webp (lowercase tree)
-  // - "FooBar"  -> https://cdn.poe2db.tw/image/Art/2DArt/SkillIcons/FooBar.webp
-  // - "http..." -> verbatim
+  // Resolves icon tokens to local images/ paths (downloaded from poe2db).
   function iconUrl(icon) {
     if (!icon) return null;
     if (icon.startsWith("http")) return icon;
-    if (icon.startsWith("4k/"))  return "https://cdn.poe2db.tw/image/art/2dart/skillicons/" + icon + ".webp";
-    if (icon.startsWith("s/"))   return "https://cdn.poe2db.tw/image/art/2dart/skillicons/support/" + icon.slice(2) + "support.webp";
-    if (icon.startsWith("ui/"))  return "https://cdn.poe2db.tw/image/Art/2DArt/UIImages/Common/" + icon.slice(3) + ".webp";
-    if (icon.startsWith("gem/")) return "https://cdn.poe2db.tw/image/Art/2DItems/Gems/New/" + icon.slice(4) + ".webp";
-    return "https://cdn.poe2db.tw/image/Art/2DArt/SkillIcons/" + icon + ".webp";
+    if (icon.startsWith("4k/"))  return "images/skill-4k/" + icon.slice(3) + ".webp";
+    if (icon.startsWith("s/"))   return "images/support/" + icon.slice(2) + "support.webp";
+    if (icon.startsWith("ui/"))  return "images/ui/" + icon.slice(3) + ".webp";
+    if (icon.startsWith("gem/")) return "images/gem/" + icon.slice(4) + ".webp";
+    return "images/skill/" + icon + ".webp";
   }
 
   const POE2DB = "https://poe2db.tw/us/";
@@ -27,6 +25,13 @@
   }
   function poewikiLink(name) {
     return POEWIKI + encodeURIComponent(name.replace(/ /g, "_"));
+  }
+
+  // Map external poecdn URLs to bundled local copies under images/poe1/.
+  function localizeLegacyImage(url) {
+    if (!url) return null;
+    const m = url.match(/^https?:\/\/web\.poecdn\.com\/image\/Art\/2DItems\/(.+)$/);
+    return m ? "images/poe1/" + m[1] : url;
   }
 
   function el(tag, attrs, ...children) {
@@ -162,6 +167,11 @@
   const cdRoot = document.getElementById("hero-countdown");
   if (cdRoot && D.launch && D.launch.iso) {
     const target = new Date(D.launch.iso).getTime();
+    const launchDate = new Date(D.launch.iso);
+    const localHint = launchDate.toLocaleString(undefined, {
+      weekday: "short", day: "numeric", month: "short", year: "numeric",
+      hour: "numeric", minute: "2-digit", timeZoneName: "short"
+    });
 
     function pad(n) { return n < 10 ? "0" + n : "" + n; }
 
@@ -170,7 +180,7 @@
       const diff = target - now;
       cdRoot.innerHTML = "";
       cdRoot.appendChild(el("div", { class: "hero-countdown-label" },
-        D.launch.label + (D.launch.localHint ? "  ·  " + D.launch.localHint : "")
+        D.launch.label + "  ·  " + localHint
       ));
 
       if (diff <= 0) {
@@ -480,14 +490,7 @@
     } else if (tab === "vaal") {
       D.vaalRolls.forEach(u => {
         const overall = cardKindClass(u.chips).replace("has-", "");
-        uniquesRoot.appendChild(
-          el("article", { class: "unique-card" },
-            kindMark(overall),
-            el("h3", { class: "unique-name" }, u.name),
-            u.desc ? el("p", null, u.desc) : null,
-            changeLines(u.chips)
-          )
-        );
+        uniquesRoot.appendChild(reworkCard(u, overall));
       });
     } else if (tab === "new") {
       renderNewUniques();
@@ -499,7 +502,7 @@
       kindMark(overall)
     );
     if (u.image) {
-      const imgUrl = "https://cdn.poe2db.tw/image/Art/2DItems/" + u.image + ".webp";
+      const imgUrl = "images/item/" + u.image + ".webp";
       const imgBox = el("div", { class: "unique-img" },
         el("img", {
           src: imgUrl,
@@ -565,7 +568,7 @@
   function legacyTile(u, bucketClass) {
     const isLegacy = !!u.legacy;
     // Image only when explicitly known (probed via poecdn). No guessing.
-    const imgUrl = isLegacy && u.legacy.image ? u.legacy.image : null;
+    const imgUrl = isLegacy && u.legacy.image ? localizeLegacyImage(u.legacy.image) : null;
     const tile = el("div", { class: "legacy-tile " + bucketClass + (imgUrl ? " has-img" : "") },
       imgUrl
         ? el("div", { class: "legacy-img" },

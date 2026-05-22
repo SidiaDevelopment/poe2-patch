@@ -478,7 +478,7 @@ a:hover {
 .section-subtitle {
   font-family: var(--font-headline);
   font-style: italic;
-  font-size: 18px;
+  font-size: 22px;
   color: var(--vellum-dim);
   max-width: 720px;
   margin: 12px auto 0;
@@ -709,8 +709,8 @@ a:hover {
 .asc-class {
   font-family: var(--font-headline);
   font-style: italic;
-  color: var(--vellum-dim);
-  font-size: 16px;
+  color: var(--vellum);
+  font-size: 19px;
 }
 .asc-new-tag {
   margin-left: auto;
@@ -898,9 +898,9 @@ a:hover {
 .skill-tag {
   font-family: var(--font-headline);
   font-style: italic;
-  font-size: 16px;
-  color: var(--vellum-dim);
-  margin-top: 2px;
+  font-size: 18px;
+  color: var(--vellum);
+  margin-top: 3px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1003,11 +1003,12 @@ a:hover {
   margin-bottom: 6px;
 }
 .callout-title {
-  font-family: var(--font-headline);
-  font-size: 17px;
-  font-weight: 600;
-  color: var(--vellum);
-  margin: 0 0 4px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gilt-bright);
+  margin: 0 0 6px;
 }
 .callout-body { font-size: 16px; color: var(--vellum-dim); margin: 0; }
 
@@ -1349,7 +1350,7 @@ a:hover {
 /* New value in a rework: gilt amber, no strikethrough */
 .val-rework{ color: var(--gilt-bright); }
 .val-arrow { color: var(--vellum-dim); padding: 0 4px; font-weight: 400; font-family: var(--font-body); }
-.val-tag   { color: var(--vellum-dim); font-size: 0.92em; font-family: var(--font-headline); font-style: italic; margin-right: 4px; }
+.val-tag   { color: var(--vellum); font-size: 1em; font-family: var(--font-headline); font-style: italic; margin-right: 6px; }
 
 /* Change lines for cards (replaces chip wall) */
 .changes {
@@ -1489,8 +1490,9 @@ a:hover {
 .unique-bucket-desc {
   font-family: var(--font-headline);
   font-style: italic;
-  color: var(--vellum-dim);
-  font-size: 14px;
+  color: var(--vellum);
+  font-size: 18px;
+  line-height: 1.5;
   flex: 1;
 }
 .unique-bucket-grid {
