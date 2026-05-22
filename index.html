@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Return of the Ancients — Patch 0.5.0 Codex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="parchment-grain"></div>
+
+  <!-- TOP NAV -->
+  <nav class="codex-nav" aria-label="Section navigation">
+    <div class="nav-mark">⚜</div>
+    <ul class="nav-links">
+      <li><a href="#content">Content</a></li>
+      <li><a href="#leagues">Leagues</a></li>
+      <li><a href="#ascendancy">Ascendancies</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#supports">Supports</a></li>
+      <li><a href="#passives">Passives</a></li>
+      <li><a href="#uniques">Uniques</a></li>
+      <li><a href="#endgame">Endgame</a></li>
+      <li><a href="#currency">Currency</a></li>
+      <li><a href="#monsters">Monsters</a></li>
+      <li><a href="#campaign">Campaign</a></li>
+      <li><a href="#removed">Removed</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ul>
+    <div class="nav-filter">
+      <label class="filter-chip" data-filter="buff">
+        <input type="checkbox" checked /><span class="dot dot-buff"></span>Buffs
+      </label>
+      <label class="filter-chip" data-filter="nerf">
+        <input type="checkbox" checked /><span class="dot dot-nerf"></span>Nerfs
+      </label>
+      <label class="filter-chip" data-filter="neutral">
+        <input type="checkbox" checked /><span class="dot dot-neutral"></span>Changes
+      </label>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-frame">
+      <div class="hero-version">PATCH 0.5.0</div>
+      <h1 class="hero-title">
+        <span class="hero-line-1">Return of the</span>
+        <span class="hero-line-2">Ancients</span>
+      </h1>
+      <div class="hero-subtitle">A visualised codex of the Path of Exile 2 patch notes</div>
+      <div class="hero-meta">
+        <span class="hero-date">22 May 2026</span>
+        <span class="hero-sep">·</span>
+        <span class="hero-league">New League: Runes of Aldur</span>
+        <span class="hero-sep">·</span>
+        <a class="hero-source" href="https://www.pathofexile.com/forum/view-thread/3932540" target="_blank" rel="noopener">Official Notes ↗</a>
+      </div>
+      <div class="hero-countdown" id="hero-countdown">
+        <!-- populated by JS -->
+      </div>
+      <div class="hero-stats" id="hero-stats">
+        <!-- populated by JS -->
+      </div>
+    </div>
+    <div class="hero-fade"></div>
+  </header>
+
+  <main class="codex-main">
+
+    <!-- LEGEND -->
+    <section class="legend-section" aria-label="Legend">
+      <div class="legend-card">
+        <h3>How to read this codex</h3>
+        <div class="legend-grid">
+          <div class="legend-item">
+            <span><span class="val val-was">50%</span><span class="val-arrow"> → </span><span class="val val-up">75%</span></span>
+            <span class="legend-desc">An inline <em>buff</em>: old value struck through, new value green.</span>
+          </div>
+          <div class="legend-item">
+            <span><span class="val val-was">200–250%</span><span class="val-arrow"> → </span><span class="val val-down">100–150%</span></span>
+            <span class="legend-desc">An inline <em>nerf</em>: new value crimson.</span>
+          </div>
+          <div class="legend-item">
+            <span><span class="val val-mute">old</span><span class="val-arrow"> → </span><span class="val val-rework">new</span></span>
+            <span class="legend-desc">A <em>rework</em> / side-grade: no strikethrough, new value gilt.</span>
+          </div>
+          <div class="legend-item">
+            <span style="display:inline-flex; align-items:center; gap:14px; font-size: 20px;">
+              <span class="kind-mark buff" style="position:static;">▲</span>
+              <span class="kind-mark nerf" style="position:static;">▼</span>
+              <span class="kind-mark rework" style="position:static;">↻</span>
+              <span class="kind-mark mixed" style="position:static;">✦</span>
+            </span>
+            <span class="legend-desc">Top-right card mark: overall <em>buff</em>, <em>nerf</em>, <em>rework</em>, or <em>mixed</em>.</span>
+          </div>
+          <div class="legend-item">
+            <span class="chip chip-flag">⚑ flagged</span>
+            <span class="legend-desc">Verify on the official notes — summarised or uncertain.</span>
+          </div>
+        </div>
+        <p class="legend-note">All quoted text comes from the official patch notes. Numeric values are coloured in place; each card carries a single overall badge. Click any card for verbatim wording. Skills link to <a href="https://poe2db.tw/us/" target="_blank" rel="noopener">poe2db</a>; PoE1 legacy uniques link to <a href="https://www.poewiki.net" target="_blank" rel="noopener">poewiki.net</a>.</p>
+      </div>
+    </section>
+
+    <!-- MAJOR CONTENT -->
+    <section id="content" class="codex-section">
+      <header class="section-header">
+        <div class="section-sigil">I</div>
+        <h2>Major Content Additions</h2>
+        <p class="section-subtitle">The pillars of the expansion — a new league, an overhauled Atlas, two new Ascendancies.</p>
+      </header>
+      <div class="content-pillars" id="content-pillars"></div>
+    </section>
+
+    <!-- LEAGUE MECHANIC REVAMPS -->
+    <section id="leagues" class="codex-section">
+      <header class="section-header">
+        <div class="section-sigil">II</div>
+        <h2>League Mechanic Revamps</h2>
+        <p class="section-subtitle">Delirium, Breach, Ritual, Fate of the Vaal, Abyss and Expedition — each receives a new storyline, hub area or atlas tree.</p>
+      </header>
+      <div class="league-grid" id="league-grid"></div>
+    </section>
+
+    <!-- ASCENDANCIES -->
+    <section id="ascendancy" class="codex-section">
+      <header class="section-header">
+        <div class="section-sigil">III</div>
+        <h2>Ascendancy Classes</h2>
+        <p class="section-subtitle">Notable passive reworks across the ascendancy ladder, plus two new ascendancies — the Martial Artist and the Spirit Walker.</p>
+      </header>
+      <div class="ascendancy-grid" id="ascendancy-grid"></div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" class="codex-section">
+      <header class="section-header">
+        <div class="section-sigil">IV</div>
+        <h2>Skill Gem Changes</h2>
+        <p class="section-subtitle">Active skill rebalancing — every documented numerical change with arrows showing direction.</p>
+      </header>
+      <div class="skills-controls">
+        <input type="search" id="skills-search" class="codex-search" placeholder="Search skills (e.g. Comet, Rolling, Bell…)" />
+        <div class="sort-group">
+          <span>Sort:</span>
+          <button class="sort-btn active" data-sort="alpha">A → Z</button>
+          <button class="sort-btn" data-sort="buffs">Biggest Buffs</button>
+          <button class="sort-btn" data-sort="nerfs">Biggest Nerfs</button>
+        </div>
+      </div>
+      <div class="skill-grid" id="skill-grid"></div>
+    </section>
+
+    <!-- SUPPORTS -->
+    <section id="supports" class="codex-section">
+      <header class="section-header">
+        <div class="section-sigil">V</div>
+        <h2>Support Gem Changes</h2>
+        <p class="section-subtitle">Combo enablers, banners, seal mechanics, augury — the supports that shift entire archetypes.</p>
+      </header>
+      <div class="support-grid" id="support-grid"></div>
+    </section>
+
+    <!-- PASSIVE TREE -->
+    <section id="passives" class="codex-section">
+      <header class="section-header">
+        <div class="section-sigil">VI</div>
+        <h2>Passive Tree Updates</h2>
+        <p class="section-subtitle">New clusters added, keystones reworked, dozens of notable rebalances — including a sweeping Energy Shield Recharge nerf.</p>
+      </header>
+      <div class="passive-callouts" id="passive-callouts"></div>
+      <div class="passive-grid" id="passive-grid"></div>
+    </section>
+
+    <!-- UNIQUES -->
+    <section id="uniques" class="codex-section">
+      <header class="section-header">
+        <div class="section-sigil">VII</div>
+        <h2>Unique Items</h2>
+        <p class="section-subtitle">Forty-two new uniques added; existing legends reworked, renamed, or rebalanced.</p>
+      </header>
+      <div class="uniques-tabs">
+        <button class="uniques-tab active" data-tab="reworks">Reworks</button>
+        <button class="uniques-tab" data-tab="new">New Uniques</button>
+        <button class="uniques-tab" data-tab="vaal">Vaal Cultivation Rolls</button>
+      </div>
+      <div class="uniques-content" id="uniques-content"></div>
+    </section>
+
+    <!-- ENDGAME -->
+    <section id="endgame" class="codex-section">
+      <header class="section-header">
+        <div class="section-sigil">VIII</div>
+        <h2>Endgame Mechanics</h2>
+        <p class="section-subtitle">A redesigned Atlas with fixed points of interest, Fortress maps, Masters of the Atlas, and a tablet system overhaul.</p>
+      </header>
+      <div class="endgame-grid" id="endgame-grid"></div>
+    </section>
+
+    <!-- CURRENCY -->
+    <section id="currency" class="codex-section">
+      <header class="section-header">
+        <div class="section-sigil">IX</div>
+        <h2>Currency &amp; Crafting</h2>
+        <p class="section-subtitle">Divines flow more freely. Transmutation grows scarce. Three new crafting systems open up.</p>
+      </header>
+      <div class="currency-grid" id="currency-grid"></div>
+    </section>
+
+    <!-- MONSTERS -->
+    <section id="monsters" class="codex-section">
+      <header class="section-header">
+        <div class="section-sigil">X</div>
+        <h2>Monster Balance</h2>
+        <p class="section-subtitle">Culling threshold raised. Leech resistance softened. Several elite monster tweaks.</p>
+      </header>
+      <div class="monster-list" id="monster-list"></div>
+    </section>
+
+    <!-- CAMPAIGN -->
+    <section id="campaign" class="codex-section">
+      <header class="section-header">
+        <div class="section-sigil">XI</div>
+        <h2>Campaign &amp; UX</h2>
+        <p class="section-subtitle">Density reductions, directional cues for veterans, controller and accessibility wins.</p>
+      </header>
+      <div class="campaign-list" id="campaign-list"></div>
+    </section>
+
+    <!-- REMOVED -->
+    <section id="removed" class="codex-section">
+      <header class="section-header">
+        <div class="section-sigil">XII</div>
+        <h2>Removed &amp; Disabled</h2>
+        <p class="section-subtitle">Sometimes the strongest design choice is subtraction.</p>
+      </header>
+      <div class="removed-list" id="removed-list"></div>
+    </section>
+
+    <!-- SOURCES & CAVEATS -->
+    <section id="sources" class="codex-section codex-sources">
+      <header class="section-header">
+        <div class="section-sigil">⚑</div>
+        <h2>Sources &amp; Caveats</h2>
+        <p class="section-subtitle">A patch this large is impossible to render without some compression — here is what to verify.</p>
+      </header>
+      <div class="sources-grid">
+        <article class="source-card">
+          <h3>Primary source</h3>
+          <p>All quoted text comes from the official <a href="https://www.pathofexile.com/forum/view-thread/3932540" target="_blank" rel="noopener">Path of Exile 2 Content Update 0.5.0 forum post</a>. If anything below conflicts with that thread, trust the thread.</p>
+        </article>
+        <article class="source-card">
+          <h3>Icon & data references</h3>
+          <ul>
+            <li>Skill / unique / passive icons sourced from <a href="https://poe2db.tw/us/" target="_blank" rel="noopener">poe2db.tw</a> via their CDN. Some icons may 404 silently if the skill was renamed.</li>
+            <li>External "wiki" links point to <a href="https://www.poe2wiki.net/wiki/Path_of_Exile_2_Wiki" target="_blank" rel="noopener">poe2wiki.net</a>.</li>
+          </ul>
+        </article>
+        <article class="source-card source-flag">
+          <h3>⚑ Things to verify</h3>
+          <p class="source-intro">No flag icons appear inline anywhere on the page. Every uncertainty in the codex is listed here in one place so you know what to double-check:</p>
+          <ul id="caveats-list">
+            <!-- populated by JS -->
+          </ul>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="codex-footer">
+    <div class="footer-line">An unofficial fan codex. Path of Exile 2 © Grinding Gear Games.</div>
+    <div class="footer-line">Built for the patch dropped 2026-05-22.</div>
+  </footer>
+
+  <!-- Modal for verbatim text -->
+  <div class="modal" id="modal" role="dialog" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-frame">
+      <button class="modal-close" data-close aria-label="Close">✕</button>
+      <div class="modal-content" id="modal-content"></div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
