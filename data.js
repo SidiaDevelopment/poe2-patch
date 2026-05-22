@@ -16,7 +16,7 @@ window.PATCH_DATA = {
     { num: "30",   label: "New Maps" },
     { num: "2",    label: "New Ascendancies" },
     { num: "300+", label: "Atlas Tree Nodes" },
-    { num: "60+",  label: "New Runes" },
+    { num: "160+", label: "New Runes" },
     { num: "40+",  label: "Ancient Modifiers" },
     { num: "45",   label: "Skill Changes" },
     { num: "27",   label: "Support Changes" },
