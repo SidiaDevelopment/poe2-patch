@@ -594,7 +594,7 @@ window.PATCH_DATA = {
 
   // ---------- MONSTER BALANCE ----------
   monsters: [
-    { kind: "nerf", text: "Culling Strike threshold for Normal enemies raised to 35% (was 30%) — harder to cull.", chips:[{kind:"nerf", text:"30% → 35%"}] },
+    { kind: "buff", text: "Culling Strike threshold for Normal enemies raised to 35% (was 30%) — easier to cull.", chips:[{kind:"buff", text:"30% → 35%"}] },
     { kind: "buff", text: "Monster Leech resistance starts at a later level and is lower at every level.", chips:[{kind:"buff", text:"easier to leech"}] },
     { kind: "buff", text: "Essence monster packs are now affected by Pack Size modifiers.", chips:[{kind:"buff", text:"Pack Size scales Essence"}] },
     { kind: "buff", text: "Azmeri Spirits released from monsters retain their power and empower other spirits.", chips:[{kind:"buff", text:"spirits compound"}] },
