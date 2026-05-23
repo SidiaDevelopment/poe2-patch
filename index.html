@@ -140,10 +140,19 @@
         <h2>Unique Items</h2>
         <p class="section-subtitle">Forty-two new uniques added; existing legends reworked, renamed, or rebalanced.</p>
       </header>
-      <div class="uniques-tabs">
-        <button class="uniques-tab active" data-tab="reworks">Reworks</button>
-        <button class="uniques-tab" data-tab="new">New Uniques</button>
-        <button class="uniques-tab" data-tab="vaal">Vaal Cultivation Rolls</button>
+      <div class="uniques-tabs" role="tablist">
+        <button class="uniques-tab active" data-tab="reworks" role="tab" aria-selected="true">
+          <span class="uniques-tab-label">Reworks</span>
+          <span class="uniques-tab-count" data-count="reworks"></span>
+        </button>
+        <button class="uniques-tab" data-tab="new" role="tab" aria-selected="false">
+          <span class="uniques-tab-label">New Uniques</span>
+          <span class="uniques-tab-count" data-count="new"></span>
+        </button>
+        <button class="uniques-tab" data-tab="vaal" role="tab" aria-selected="false">
+          <span class="uniques-tab-label">Vaal Cultivation</span>
+          <span class="uniques-tab-count" data-count="vaal"></span>
+        </button>
       </div>
       <div class="uniques-content" id="uniques-content"></div>
     </section>

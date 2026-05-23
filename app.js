@@ -615,11 +615,26 @@
     return tile;
   }
 
+  // Fill the count badges inside each uniques tab.
+  const UNIQUE_COUNTS = {
+    reworks: (D.uniqueReworks || []).length,
+    "new":   (D.newUniques || []).length,
+    vaal:    (D.vaalRolls || []).length,
+  };
+  document.querySelectorAll(".uniques-tab-count").forEach(s => {
+    const k = s.dataset.count;
+    if (UNIQUE_COUNTS[k] != null) s.textContent = UNIQUE_COUNTS[k];
+  });
+
   renderUniques("reworks");
   document.querySelectorAll(".uniques-tab").forEach(t => {
     t.addEventListener("click", () => {
-      document.querySelectorAll(".uniques-tab").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".uniques-tab").forEach(b => {
+        b.classList.remove("active");
+        b.setAttribute("aria-selected", "false");
+      });
       t.classList.add("active");
+      t.setAttribute("aria-selected", "true");
       renderUniques(t.dataset.tab);
     });
   });
