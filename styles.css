@@ -116,6 +116,33 @@ a:hover {
   color: var(--gilt-bright);
   border-bottom-color: var(--gilt);
 }
+
+/* Hamburger toggle — desktop hides it, mobile media query exposes it. */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 36px;
+  height: 32px;
+  padding: 0 6px;
+  background: transparent;
+  border: 1px solid var(--rule);
+  cursor: pointer;
+  margin-left: auto;
+  border-radius: 2px;
+}
+.nav-toggle span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: var(--gilt);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  transform-origin: center;
+}
+.codex-nav.is-open .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.codex-nav.is-open .nav-toggle span:nth-child(2) { opacity: 0; }
+.codex-nav.is-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 /* ---------- HERO ---------- */
 .hero {
   position: relative;
@@ -125,6 +152,25 @@ a:hover {
   overflow: hidden;
   isolation: isolate;
 }
+/* Scroll-down indicator below the countdown — only on phones.
+   Pure-CSS chevron made from two borders. Blinks via opacity. */
+.hero-scroll {
+  display: none;
+  width: 22px;
+  height: 22px;
+  border-right: 2px solid var(--gilt);
+  border-bottom: 2px solid var(--gilt);
+  border-bottom-right-radius: 2px;
+  margin: 32px auto 0;
+  transform: rotate(45deg);
+  animation: hero-scroll-blink 1.4s ease-in-out infinite;
+}
+.hero-scroll:hover { border-color: var(--gilt-bright); }
+@keyframes hero-scroll-blink {
+  0%, 100% { opacity: 0.25; }
+  50%      { opacity: 1; }
+}
+
 /* The actual key-art background. Lives on its own layer so a mask can fade
    ONLY the image at the bottom — the hero content (countdown, stats) stays
    at full opacity above it. */
@@ -132,12 +178,15 @@ a:hover {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background:
+  background-image:
     radial-gradient(ellipse at 50% 55%, rgba(10,7,5,0.35) 0%, rgba(10,7,5,0.72) 80%),
     linear-gradient(180deg, rgba(10,7,5,0.55) 0%, rgba(10,7,5,0.5) 50%, rgba(10,7,5,0.5) 100%),
     radial-gradient(ellipse at 50% 0%, rgba(201,165,103,0.10) 0%, transparent 60%),
     radial-gradient(ellipse at 50% 100%, rgba(177,59,59,0.07) 0%, transparent 70%),
-    url("images/presskit-web/Key-Art-No-Logo.jpg") center / cover no-repeat;
+    url("images/presskit-web/Key-Art-No-Logo.jpg");
+  background-position: 0 0, 0 0, 0 0, 0 0, center;
+  background-size: auto, auto, auto, auto, cover;
+  background-repeat: no-repeat;
   mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%);
   -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%);
   pointer-events: none;
@@ -187,6 +236,9 @@ a:hover {
   margin-bottom: 0.4em;
   opacity: 0;
   animation: hero-fade 1.4s ease 0.2s both;
+  text-shadow:
+    0 0 18px rgba(201, 165, 103, 0.45),
+    0 0 38px rgba(201, 165, 103, 0.2);
 }
 .hero-line-2 {
   display: block;
@@ -194,7 +246,8 @@ a:hover {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 60px rgba(201, 165, 103, 0.2);
+  filter: drop-shadow(0 0 22px rgba(201, 165, 103, 0.55))
+          drop-shadow(0 0 52px rgba(201, 165, 103, 0.3));
   opacity: 0;
   animation: hero-fade 1.4s ease 0.4s both;
 }
@@ -1362,6 +1415,7 @@ a.league-tag {
 .list-row.has-nerf { border-left-color: var(--crimson); }
 .list-row.has-neutral { border-left-color: var(--gilt-dark); }
 .list-row.has-mixed { border-left-color: var(--amber); }
+.list-row { padding-right: 48px; }
 .list-row .list-text { flex: 1; color: var(--vellum); }
 .list-row .list-chips { display: flex; gap: 6px; flex-wrap: wrap; flex-shrink: 0; }
 .list-row .kind-mark {
@@ -1907,8 +1961,126 @@ a.league-tag {
   .nav-links { gap: 0; }
   .nav-links a { padding: 6px 6px; font-size: 11.5px; }
   .codex-main { padding: 30px 18px 80px; }
+  .codex-section { margin-top: 64px; }
   .hero { padding: 80px 18px 60px; }
   .hero-stats { gap: 14px; }
   .hero-stat-num { font-size: 30px; }
   .modal-frame { padding: 28px 22px; }
+  /* Endgame text gets crowded under the right-side photo at narrow widths.
+     Tone the photo into a faint full-card backdrop instead. */
+  .endgame-photo {
+    width: 100%;
+    max-width: none;
+    opacity: 0.18;
+    mask-image: linear-gradient(180deg, #000 0%, #000 60%, transparent 100%);
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 60%, transparent 100%);
+  }
+}
+
+/* Phone-sized — tighter spacing, scrollable nav, smaller hero, single-column
+   uniques bucket grid, modal becomes a full-bleed sheet. */
+@media (max-width: 560px) {
+  .codex-nav { padding: 10px 14px; gap: 10px; }
+  .nav-toggle { display: flex; }
+  /* Drawer: nav-links drops down from the sticky nav when toggle is open. */
+  .nav-links {
+    position: absolute;
+    top: 100%;
+    left: 0; right: 0;
+    flex-direction: column;
+    gap: 0;
+    padding: 8px 14px 14px;
+    background: linear-gradient(180deg, rgba(10,8,7,0.98), rgba(10,8,7,0.95));
+    border-bottom: 1px solid var(--rule-strong);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.55);
+    backdrop-filter: blur(6px);
+    transform: translateY(-12px);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.22s ease, opacity 0.2s ease;
+  }
+  .codex-nav.is-open .nav-links {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .nav-links a {
+    display: block;
+    padding: 12px 6px;
+    font-size: 13px;
+    letter-spacing: 0.22em;
+    border-bottom: 1px solid var(--rule);
+  }
+  .nav-links li:last-child a { border-bottom: none; }
+  .codex-main { padding: 24px 14px 60px; }
+  .codex-section { margin-top: 48px; }
+
+  /* Hero takes the entire first screen — background image, title, timer,
+     and misc info only. The stat grid is hidden to avoid overflow.
+     Use 100svh (small viewport height) so the bottom isn't hidden behind
+     mobile browser chrome. */
+  .hero {
+    padding: 72px 14px 80px;
+    height: 100vh;
+    height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .hero-frame {
+    margin: 0 auto;
+  }
+  .hero-version { font-size: 12px; letter-spacing: 0.4em; }
+  .hero-subtitle { font-size: 18px; }
+  .hero-meta { gap: 8px; font-size: 11px; }
+  .hero-countdown { padding: 18px 16px; }
+  .hero-countdown-grid { gap: 4px; }
+  .hero-countdown-num { font-size: 28px; }
+  .hero-countdown-unit { font-size: 9.5px; letter-spacing: 0.18em; }
+  /* Hide the quest-facts stat grid on phones — too dense for the viewport. */
+  .hero-stats { display: none; }
+  /* Show the scroll-down indicator on phones only. */
+  .hero-scroll { display: block; }
+  /* Shift the key art upward on phones so the character's face sits above
+     the title/countdown text overlay. The photo layer is scaled to 150%
+     container height so there's vertical overflow to crop (cover sizing
+     would otherwise lock the image to container height with no room to
+     shift on portrait viewports). */
+  .hero-bg {
+    background-size: auto, auto, auto, auto, auto 125%;
+    background-position: 0 0, 0 0, 0 0, 0 0, 50% 85%;
+  }
+
+  .section-header h2 { font-size: 28px; }
+  .section-subtitle { font-size: 18px; }
+
+  .league-card.featured ul { column-count: 1; }
+  .league-img, .pillar-img { height: 140px; }
+  .league-card.featured .league-img { height: 200px; }
+
+  .unique-bucket-grid { grid-template-columns: 1fr; }
+  .unique-bucket-header { flex-direction: column; align-items: flex-start; gap: 6px; }
+
+  .currency-img { height: 140px; }
+  .currency-card h3, .league-name, .league-card.featured .league-name { font-size: 22px; }
+
+  /* Endgame photo already faded by the 780px rule; here just hide it. */
+  .endgame-photo { display: none; }
+  .endgame-feature { padding: 22px 20px; }
+
+  /* List rows: kind-mark vertical-center stays, but text can flow under it. */
+  .list-row { padding: 12px 16px; gap: 10px; }
+  .list-row .kind-mark { font-size: 20px; right: 12px; }
+
+  .modal-frame { padding: 24px 16px; max-height: 92vh; }
+  .footer-logo, .footer-art { max-width: 260px; }
+
+  /* Uniques tabs: shrink padding and wrap so all three tabs fit. */
+  .uniques-tabs { flex-wrap: wrap; gap: 6px; }
+  .uniques-tab { padding: 6px 10px; font-size: 11.5px; letter-spacing: 0.14em; }
+
+  /* Skills controls: stack search above sort buttons. */
+  .skills-controls { padding: 12px 14px; gap: 10px; }
+  .sort-group { flex-wrap: wrap; }
 }

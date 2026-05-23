@@ -15,7 +15,10 @@
   <!-- TOP NAV -->
   <nav class="codex-nav" aria-label="Section navigation">
     <div class="nav-mark">⚜</div>
-    <ul class="nav-links">
+    <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links-list">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links-list">
       <li><a href="#content">Content</a></li>
       <li><a href="#leagues">Leagues</a></li>
       <li><a href="#ascendancy">Ascendancies</a></li>
@@ -53,6 +56,7 @@
       <div class="hero-stats" id="hero-stats">
         <!-- populated by JS -->
       </div>
+      <a class="hero-scroll" href="#content" aria-label="Scroll to content"></a>
     </div>
   </header>
 

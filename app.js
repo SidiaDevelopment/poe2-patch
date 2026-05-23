@@ -225,7 +225,7 @@
     pillarsRoot.appendChild(
       el("div", { class: "pillar" + (p.image ? " has-img" : "") },
         p.image ? el("div", { class: "pillar-img" },
-          el("img", { src: "images/" + p.image, alt: p.name, loading: "lazy" })
+          el("img", { src: "images/" + p.image, alt: p.name, loading: "lazy", fetchpriority: "low" })
         ) : null,
         el("span", { class: "pillar-tag" }, p.tag),
         el("h3", null, p.name),
@@ -241,7 +241,7 @@
     leagueRoot.appendChild(
       el("article", { class: "league-card" + (l.featured ? " featured" : "") + (l.image ? " has-img" : "") + (l.isNew ? " is-new" : "") },
         l.image ? el("div", { class: "league-img" },
-          el("img", { src: "images/" + l.image, alt: l.name, loading: "lazy" })
+          el("img", { src: "images/" + l.image, alt: l.name, loading: "lazy", fetchpriority: "low" })
         ) : null,
         el("div", { class: "league-body" },
           el("div", { class: "league-banner" },
@@ -323,7 +323,7 @@
     const classIconUrl = iconUrl(a.classIcon);
     const markEl = classIconUrl
       ? el("span", { class: "asc-mark asc-mark-img" },
-          el("img", { src: classIconUrl, alt: a.cls, loading: "lazy",
+          el("img", { src: classIconUrl, alt: a.cls, loading: "eager", fetchpriority: "high",
             onerror: function () {
               const p = this.parentNode;
               if (!p) return;
@@ -337,7 +337,7 @@
     const card = el("article", { class: "asc-card" + (a.isNew ? " new" : "") + (wide ? " asc-card-wide" : "") + (a.splash ? " has-splash" : "") },
       kindMark(overall),
       a.splash ? el("div", { class: "asc-splash" },
-        el("img", { src: "images/" + a.splash, alt: a.name, loading: "lazy" })
+        el("img", { src: "images/" + a.splash, alt: a.name, loading: "lazy", fetchpriority: "low" })
       ) : null,
       el("div", { class: "asc-header" },
         markEl,
@@ -395,7 +395,8 @@
       const img = el("img", {
         src: iurl,
         alt: s.name,
-        loading: "lazy",
+        loading: "eager",
+        fetchpriority: "high",
         referrerpolicy: "no-referrer",
         onerror: function () { this.style.display = "none"; iconBox.appendChild(el("span", { class: "icon-fallback" }, s.name[0])); }
       });
@@ -448,7 +449,7 @@
     const iurl = iconUrl(s.icon);
     if (iurl) {
       const img = el("img", {
-        src: iurl, alt: s.name, loading: "lazy", referrerpolicy: "no-referrer",
+        src: iurl, alt: s.name, loading: "eager", fetchpriority: "high", referrerpolicy: "no-referrer",
         onerror: function () { this.style.display = "none"; iconBox.appendChild(el("span", { class: "icon-fallback" }, s.name[0])); }
       });
       iconBox.appendChild(img);
@@ -523,7 +524,8 @@
         el("img", {
           src: imgUrl,
           alt: u.name,
-          loading: "lazy",
+          loading: "eager",
+          fetchpriority: "high",
           referrerpolicy: "no-referrer",
           onerror: function () { this.parentNode.style.display = "none"; card.classList.remove("has-img"); }
         })
@@ -591,7 +593,8 @@
             el("img", {
               src: imgUrl,
               alt: u.name,
-              loading: "lazy",
+              loading: "eager",
+              fetchpriority: "high",
               referrerpolicy: "no-referrer",
               onerror: function () { this.parentNode.style.display = "none"; tile.classList.remove("has-img"); }
             })
@@ -646,7 +649,7 @@
     const imgPath = ENDGAME_IMG[group.title];
     eg.appendChild(
       el("article", { class: "endgame-feature" },
-        imgPath ? el("img", { class: "endgame-photo", src: "images/" + imgPath, alt: group.title, loading: "lazy" }) : null,
+        imgPath ? el("img", { class: "endgame-photo", src: "images/" + imgPath, alt: group.title, loading: "lazy", fetchpriority: "low" }) : null,
         el("div", { class: "endgame-body" },
           el("h3", null, group.title),
           el("div", { class: "endgame-sub" }, ENDGAME_SUB[group.title] || ""),
@@ -662,7 +665,7 @@
     cur.appendChild(
       el("article", { class: "currency-card" + (g.image ? " has-img" : "") },
         g.image ? el("div", { class: "currency-img" },
-          el("img", { src: "images/" + g.image, alt: g.title, loading: "lazy" })
+          el("img", { src: "images/" + g.image, alt: g.title, loading: "lazy", fetchpriority: "low" })
         ) : null,
         el("h3", null, g.title),
         g.sub ? el("div", { class: "currency-sub" }, g.sub) : null,
@@ -780,6 +783,23 @@
     return svgWrap(`
       <circle cx="50" cy="50" r="36" />
       <path d="M50 22 L50 78 M30 32 L70 68 M30 68 L70 32" />`);
+  }
+
+  // ---------- MOBILE NAV TOGGLE ----------
+  const navEl = document.querySelector(".codex-nav");
+  const navToggle = navEl && navEl.querySelector(".nav-toggle");
+  if (navEl && navToggle) {
+    navToggle.addEventListener("click", () => {
+      const open = navEl.classList.toggle("is-open");
+      navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    // Close the drawer when a nav link is tapped.
+    navEl.querySelectorAll(".nav-links a").forEach(a => {
+      a.addEventListener("click", () => {
+        navEl.classList.remove("is-open");
+        navToggle.setAttribute("aria-expanded", "false");
+      });
+    });
   }
 
 })();
