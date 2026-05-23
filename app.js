@@ -93,14 +93,15 @@
         li.appendChild(el("span", { class: newCls }, c.to));
       } else {
         const text = c.text || "";
+        const lossClass = c.removed ? " ch-loss" : "";
         if (c.kind === "buff") {
-          li.className = "ch-add";
+          li.className = "ch-add" + lossClass;
           li.appendChild(el("span", { class: "val val-up" }, text));
         } else if (c.kind === "nerf") {
-          li.className = "ch-rem";
+          li.className = "ch-rem" + lossClass;
           li.appendChild(el("span", { class: "val val-down" }, text));
         } else {
-          li.className = "ch-rework";
+          li.className = "ch-rework" + lossClass;
           li.appendChild(el("span", { class: "val val-mute" }, text));
         }
       }
@@ -272,7 +273,18 @@
     return node;
   }
 
-  D.ascendancies.forEach(a => {
+  // Layout order: regular cards first, then a forced Blood Mage + Witchhunter
+  // pair wrapper, then any wide cards (Chronomancer) on their own full row.
+  const isPair = (a) => a.name === "Blood Mage" || a.name === "Witchhunter";
+  const isWide = (a) => a.changes.length >= 5;
+  const ascSorted = [
+    ...D.ascendancies.filter(a => !isPair(a) && !isWide(a)),
+    ...D.ascendancies.filter(isPair),
+    ...D.ascendancies.filter(isWide),
+  ];
+  const pairWrap = el("div", { class: "asc-pair" });
+  let pairAppended = false;
+  ascSorted.forEach(a => {
     const list = el("ul", { class: "asc-changes" },
       ...a.changes.map(c =>
         el("li", { class: "asc-change" },
@@ -309,20 +321,25 @@
           })
         )
       : el("span", { class: "asc-mark" }, a.mark);
-    ascRoot.appendChild(
-      el("article", { class: "asc-card" + (a.isNew ? " new" : "") },
-        kindMark(overall),
-        el("div", { class: "asc-header" },
-          markEl,
-          el("div", null,
-            el("h3", { class: "asc-name" }, a.name),
-            el("div", { class: "asc-class" }, a.cls)
-          ),
-          a.isNew ? el("span", { class: "asc-new-tag" }, "New") : null
+    const wide = isWide(a);
+    const card = el("article", { class: "asc-card" + (a.isNew ? " new" : "") + (wide ? " asc-card-wide" : "") },
+      kindMark(overall),
+      el("div", { class: "asc-header" },
+        markEl,
+        el("div", null,
+          el("h3", { class: "asc-name" }, a.name),
+          el("div", { class: "asc-class" }, a.cls)
         ),
-        list
-      )
+        a.isNew ? el("span", { class: "asc-new-tag" }, "New") : null
+      ),
+      list
     );
+    if (isPair(a)) {
+      pairWrap.appendChild(card);
+      if (!pairAppended) { ascRoot.appendChild(pairWrap); pairAppended = true; }
+    } else {
+      ascRoot.appendChild(card);
+    }
   });
 
   // ---------- SKILLS ----------
