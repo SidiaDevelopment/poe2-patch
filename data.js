@@ -43,32 +43,38 @@ window.PATCH_DATA = {
     {
       tag: "New League",
       name: "Runes of Aldur",
-      body: "An economy league of Remnants and Runic Recipes. Each runeshape adds a wave of enemies; Verisium metal is the new currency. Adds a defensive layer — Runic Ward — that activates at 1 life."
+      body: "An economy league of Remnants and Runic Recipes. Each runeshape adds a wave of enemies; Verisium metal is the new currency. Adds a defensive layer — Runic Ward — that activates at 1 life.",
+      image: "presskit-web/Farrow_RunesofAldur.jpg"
     },
     {
       tag: "Endgame Overhaul",
       name: "Origins of Divinity",
-      body: "The Atlas now has fixed points of interest, deterministic Pinnacle Boss access, 30 new maps, and a Fortress where map completion grants Atlas Passive Tree points. The Atlas Tree has been expanded with 300+ nodes."
+      body: "The Atlas now has fixed points of interest, deterministic Pinnacle Boss access, 30 new maps, and a Fortress where map completion grants Atlas Passive Tree points. The Atlas Tree has been expanded with 300+ nodes.",
+      image: "presskit-web/Fortress_Atlas.jpg"
     },
     {
       tag: "New Ascendancies",
       name: "Martial Artist & Spirit Walker",
-      body: "The Monk gains the Martial Artist (illusions & hand-to-hand). The Huntress gains the Spirit Walker (commands Stag, Owl and Bear spirits)."
+      body: "The Monk gains the Martial Artist (illusions & hand-to-hand). The Huntress gains the Spirit Walker (commands Stag, Owl and Bear spirits).",
+      image: "presskit-web/MartialArtist_Illusions_2.jpg"
     },
     {
       tag: "New System",
       name: "Masters of the Atlas",
-      body: "Three masters — Doryani, Hilda, Jado — each offer 12 nodes with 4 simultaneously selectable. All three can be allocated at once; selections change at will."
+      body: "Three masters — Doryani, Hilda, Jado — each offer 12 nodes with 4 simultaneously selectable. All three can be allocated at once; selections change at will.",
+      image: "presskit-web/Masters_Cinematic.jpg"
     },
     {
       tag: "Defensive Layer",
       name: "Runic Ward",
-      body: "Kicks in at 1 life and absorbs damage independently of life regen. Armours below level 55 gain Runic Ward for free; higher-level armours trade some defences for it."
+      body: "Kicks in at 1 life and absorbs damage independently of life regen. Armours below level 55 gain Runic Ward for free; higher-level armours trade some defences for it.",
+      image: "presskit-web/Aldur_Rune.jpg"
     },
     {
       tag: "Pinnacle",
       name: "Arbiter of Divinity",
-      body: "A new Pinnacle Boss accessed through the Fortress. Maps in the Fortress can be skipped by killing the Arbiter five times."
+      body: "A new Pinnacle Boss accessed through the Fortress. Maps in the Fortress can be skipped by killing the Arbiter five times.",
+      image: "presskit-web/Bodach-Cinematic.jpg"
     },
   ],
 
@@ -79,6 +85,7 @@ window.PATCH_DATA = {
       tag: "New Challenge League",
       hub: "Ruins of Kingsmarch · with NPC Farrow",
       featured: true,
+      image: "presskit-web/Aldur_SpiderCinematic.jpg",
       bullets: [
         "Each area contains a Remnant; craft an item via Runic Recipes — additional runeshapes add enemy waves.",
         "Remnants start with between 2 and 10 slots.",
@@ -97,6 +104,7 @@ window.PATCH_DATA = {
       name: "Delirium",
       tag: "Revamped",
       hub: "The Withered Willow",
+      image: "presskit-web/Delirium_RavenTricksterCinematic.jpg",
       bullets: [
         "Delirium Atlas Passive Tree completely revamped.",
         "New progress bar shows depth into the fog; new Delirium Encounters on the bar.",
@@ -114,6 +122,7 @@ window.PATCH_DATA = {
       name: "Breach",
       tag: "Revamped",
       hub: "Monastery of the Keepers",
+      image: "presskit-web/Breach_EshCinematic.jpg",
       bullets: [
         "Breach Atlas Passive Tree completely revamped.",
         "Progress bar shows time until the breach closes; reaching 100% begins a Stabilised Breach with a new boss: Vruun, Marshal of Xesht.",
@@ -129,6 +138,7 @@ window.PATCH_DATA = {
       name: "Ritual",
       tag: "Revamped",
       hub: "Caer Tarth · Aoife the restless spirit",
+      image: "presskit-web/Aoife_Ritual.jpg",
       bullets: [
         "Ritual Atlas Passive Tree completely revamped.",
         "After completing a Ritual Altar, locusts point the way to the next.",
@@ -144,6 +154,7 @@ window.PATCH_DATA = {
       name: "Fate of the Vaal",
       tag: "Moved to Core",
       hub: "Lira Vaal · Atziri's Temple",
+      image: "presskit-web/Vaal_Atziri_Cinematic1.jpg",
       bullets: [
         "Fate of the Vaal added to the core game with its own Atlas Passive Tree.",
         "Six Ancient Beacons in Act 3 (then six more in Interludes). Atziri's Temple now sits in the north-east of the Atlas.",
@@ -158,6 +169,7 @@ window.PATCH_DATA = {
       name: "Abyss",
       tag: "Revamped",
       hub: "Atlas Abyss Cracks",
+      image: "presskit-web/Abyss_Cinematic.jpg",
       bullets: [
         "Large Abyss cracks now appear on the Atlas. Completing one always opens an Abyssal Depths with a boss fight.",
         "Abyss Atlas Tree revamped.",
@@ -171,6 +183,7 @@ window.PATCH_DATA = {
       name: "Expedition",
       tag: "Temporarily Disabled on Standard",
       hub: "Returns after Runes of Aldur",
+      image: "presskit-web/Uthred_the_Stardrinker.jpg",
       bullets: [
         "Expedition League temporarily disabled on Standard leagues.",
         "Recombinator disabled · Omen of Recombination removed (existing copies deleted on login).",
@@ -189,6 +202,7 @@ window.PATCH_DATA = {
       cls: "Monk",
       mark: "M",
       classIcon: "ui/IconDexIntFourb_Monk2",
+      splash: "presskit-web/Martial_Artist_Ascendancy_Art.jpg",
       isNew: true,
       changes: [
         { name: "New Ascendancy", desc: "Specialises in illusions and hand-to-hand combat. Full node list not in the patch summary." }
@@ -199,6 +213,7 @@ window.PATCH_DATA = {
       cls: "Huntress",
       mark: "S",
       classIcon: "ui/IconDexFourb_Huntress2",
+      splash: "presskit-web/Spiritwalker_Ascendancy_Art.jpg",
       isNew: true,
       changes: [
         { name: "New Ascendancy", desc: "Commands animal spirits — Stag, Owl and Bear. Full node list not in the patch summary." }

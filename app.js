@@ -223,7 +223,10 @@
   const pillarsRoot = document.getElementById("content-pillars");
   D.pillars.forEach(p => {
     pillarsRoot.appendChild(
-      el("div", { class: "pillar" },
+      el("div", { class: "pillar" + (p.image ? " has-img" : "") },
+        p.image ? el("div", { class: "pillar-img" },
+          el("img", { src: "images/" + p.image, alt: p.name, loading: "lazy" })
+        ) : null,
         el("span", { class: "pillar-tag" }, p.tag),
         el("h3", null, p.name),
         el("p", null, p.body)
@@ -236,7 +239,10 @@
   D.leagues.forEach(l => {
     const ul = el("ul", null, ...l.bullets.map(b => el("li", null, b)));
     leagueRoot.appendChild(
-      el("article", { class: "league-card" + (l.featured ? " featured" : "") },
+      el("article", { class: "league-card" + (l.featured ? " featured" : "") + (l.image ? " has-img" : "") },
+        l.image ? el("div", { class: "league-img" },
+          el("img", { src: "images/" + l.image, alt: l.name, loading: "lazy" })
+        ) : null,
         el("div", { class: "league-banner" },
           el("span", { class: "league-tag" }, l.tag),
           el("a", { class: "league-tag", href: poe2dbLink(l.name), target: "_blank", rel: "noopener" }, "poe2db ↗")
@@ -325,8 +331,11 @@
         )
       : el("span", { class: "asc-mark" }, a.mark);
     const wide = isWide(a);
-    const card = el("article", { class: "asc-card" + (a.isNew ? " new" : "") + (wide ? " asc-card-wide" : "") },
+    const card = el("article", { class: "asc-card" + (a.isNew ? " new" : "") + (wide ? " asc-card-wide" : "") + (a.splash ? " has-splash" : "") },
       kindMark(overall),
+      a.splash ? el("div", { class: "asc-splash" },
+        el("img", { src: "images/" + a.splash, alt: a.name, loading: "lazy" })
+      ) : null,
       el("div", { class: "asc-header" },
         markEl,
         el("div", null,
@@ -626,7 +635,6 @@
     "Masters of the Atlas":           "Doryani · Hilda · Jado. Twelve nodes each, four active at once. Re-pick at will.",
     "Other Endgame":                  "Shrine, omen and precursor tablet rebalances. New Omen of Chaotic Effectiveness. Map UI polish.",
   };
-
   const eg = document.getElementById("endgame-grid");
   eg.className = "endgame-features";  // replace the old grid layout
   D.endgame.forEach(group => {

@@ -3,3 +3,7 @@ _debug.txt
 *.log
 .DS_Store
 Thumbs.db
+
+# Raw GGG presskit (10-15 MB each, ~535 MB total). Only the resized
+# images/presskit-web/ copies are checked in and served to GitHub Pages.
+images/presskit/
