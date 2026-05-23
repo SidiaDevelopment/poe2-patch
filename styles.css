@@ -27,8 +27,8 @@
 
   /* Typography */
   --font-display:    "Cinzel", "Cormorant Garamond", serif;
-  --font-headline:   "Cormorant Garamond", "Garamond", serif;
-  --font-body:       "EB Garamond", Georgia, serif;
+  --font-headline:   "Spectral", "Cormorant Garamond", "Garamond", serif;
+  --font-body:       "Lora", Georgia, "Times New Roman", serif;
   --font-mono:       "JetBrains Mono", "Consolas", monospace;
 }
 
@@ -105,7 +105,7 @@ a:hover {
   display: inline-block;
   padding: 6px 10px;
   font-family: var(--font-display);
-  font-size: 11.5px;
+  font-size: 12.5px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--vellum-dim);
@@ -163,7 +163,7 @@ a:hover {
 }
 .hero-version {
   font-family: var(--font-display);
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.5em;
   color: var(--gilt);
   margin-bottom: 18px;
@@ -201,7 +201,7 @@ a:hover {
 .hero-subtitle {
   font-family: var(--font-headline);
   font-style: italic;
-  font-size: 22px;
+  font-size: 24px;
   color: var(--vellum);
   margin-top: 22px;
   opacity: 0;
@@ -216,7 +216,7 @@ a:hover {
   align-items: center;
   gap: 12px;
   font-family: var(--font-display);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--vellum);
@@ -251,7 +251,7 @@ a:hover {
 .hero-countdown::after  { right: -1px; border-left: none; }
 .hero-countdown-label {
   font-family: var(--font-display);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.4em;
   text-transform: uppercase;
   color: var(--gilt);
@@ -307,7 +307,7 @@ a:hover {
   margin-top: 6px;
   font-family: var(--font-headline);
   font-style: italic;
-  font-size: 14px;
+  font-size: 15px;
   color: var(--vellum-dim);
 }
 
@@ -349,7 +349,7 @@ a:hover {
 .hero-stat-label {
   margin-top: 8px;
   font-family: var(--font-display);
-  font-size: 10.5px;
+  font-size: 11.5px;
   letter-spacing: 0.25em;
   text-transform: uppercase;
   color: var(--vellum-dim);
@@ -388,7 +388,7 @@ a:hover {
 }
 .legend-card h3 {
   font-family: var(--font-display);
-  font-size: 14px;
+  font-size: 15px;
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--gilt);
@@ -414,7 +414,7 @@ a:hover {
   margin: 22px 0 0;
   font-family: var(--font-headline);
   font-style: italic;
-  font-size: 16px;
+  font-size: 18px;
   color: var(--vellum-dim);
 }
 
@@ -465,7 +465,7 @@ a:hover {
 .section-subtitle {
   font-family: var(--font-headline);
   font-style: italic;
-  font-size: 22px;
+  font-size: 24px;
   color: var(--vellum-dim);
   max-width: 720px;
   margin: 12px auto 0;
@@ -478,14 +478,14 @@ a:hover {
   gap: 6px;
   padding: 3px 10px;
   font-family: var(--font-mono);
-  font-size: 12.5px;
+  font-size: 13.5px;
   font-weight: 600;
   letter-spacing: 0.02em;
   border-radius: 2px;
   border: 1px solid;
   white-space: nowrap;
 }
-.chip .arr { font-size: 10px; line-height: 1; }
+.chip .arr { font-size: 11px; line-height: 1; }
 .chip-buff {
   color: #b6dab1;
   border-color: var(--emerald-deep);
@@ -510,7 +510,7 @@ a:hover {
 }
 .chip-mag {
   font-family: var(--font-display);
-  font-size: 10.5px;
+  font-size: 11.5px;
   letter-spacing: 0.18em;
   padding: 2px 8px;
   color: var(--vellum-dim);
@@ -557,7 +557,7 @@ a:hover {
 }
 .pillar h3 {
   font-family: var(--font-display);
-  font-size: 17px;
+  font-size: 16px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--gilt-bright);
@@ -572,7 +572,7 @@ a:hover {
   display: inline-block;
   margin-bottom: 14px;
   font-family: var(--font-display);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.35em;
   text-transform: uppercase;
   color: var(--vellum-dim);
@@ -651,7 +651,7 @@ a:hover {
   z-index: 3;
   padding: 3px 10px;
   font-family: var(--font-display);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: #b6dab1;
@@ -693,6 +693,7 @@ a.league-tag {
 .league-hub {
   font-family: var(--font-headline);
   font-style: italic;
+  font-size: 19px;
   color: var(--gilt-bright);
   margin-bottom: 16px;
 }
@@ -714,7 +715,7 @@ a.league-tag {
   position: absolute;
   left: 0;
   top: 3px;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--gilt);
 }
 
@@ -867,7 +868,7 @@ a.league-tag {
 /* Small qualitative tag (new / moved / reworked / removed) shown after the change name. */
 .asc-badge {
   font-family: var(--font-display);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   padding: 2px 8px;
@@ -920,7 +921,7 @@ a.league-tag {
   background: var(--obsidian-deep);
   border: 1px solid var(--rule);
   font-family: var(--font-body);
-  font-size: 17px;
+  font-size: 16px;
   color: var(--vellum);
   border-radius: 2px;
 }
@@ -930,7 +931,7 @@ a.league-tag {
   gap: 4px;
   align-items: center;
   font-family: var(--font-display);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--vellum-dim);
@@ -940,7 +941,7 @@ a.league-tag {
   background: transparent;
   border: 1px solid var(--rule);
   font-family: var(--font-display);
-  font-size: 10.5px;
+  font-size: 11.5px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--vellum-dim);
@@ -1014,7 +1015,7 @@ a.league-tag {
 .skill-tag {
   font-family: var(--font-headline);
   font-style: italic;
-  font-size: 18px;
+  font-size: 20px;
   color: var(--vellum);
   margin-top: 3px;
   white-space: nowrap;
@@ -1034,7 +1035,7 @@ a.league-tag {
   padding-top: 10px;
   border-top: 1px dashed var(--rule);
   font-family: var(--font-display);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.22em;
   color: var(--vellum-dim);
   text-transform: uppercase;
@@ -1118,7 +1119,7 @@ a.league-tag {
 }
 .callout-tag {
   font-family: var(--font-display);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--vellum-dim);
@@ -1126,7 +1127,7 @@ a.league-tag {
 }
 .callout-title {
   font-family: var(--font-display);
-  font-size: 14px;
+  font-size: 15px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--gilt-bright);
@@ -1151,7 +1152,7 @@ a.league-tag {
 .passive-card.has-mixed { border-left-color: var(--amber); }
 .passive-name {
   font-family: var(--font-display);
-  font-size: 14px;
+  font-size: 15px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--gilt-bright);
@@ -1172,7 +1173,7 @@ a.league-tag {
   background: transparent;
   border: 1px solid var(--rule);
   font-family: var(--font-display);
-  font-size: 11.5px;
+  font-size: 12.5px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--vellum-dim);
@@ -1228,7 +1229,7 @@ a.league-tag {
 }
 .new-unique-pill {
   font-family: var(--font-display);
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.06em;
   padding: 8px 14px;
   border: 1px solid var(--rule);
@@ -1265,7 +1266,7 @@ a.league-tag {
 .endgame-card::after,  .currency-card::after  { bottom: -1px; right: -1px; border-left: none; border-top: none; }
 .endgame-card h3, .currency-card h3 {
   font-family: var(--font-display);
-  font-size: 14px;
+  font-size: 15px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--gilt-bright);
@@ -1321,7 +1322,7 @@ a.league-tag {
   font-family: var(--font-headline);
   font-style: italic;
   color: var(--gilt-bright);
-  font-size: 16px;
+  font-size: 18px;
   margin-bottom: 16px;
 }
 .currency-card ul {
@@ -1338,7 +1339,7 @@ a.league-tag {
   content: "✦";
   position: absolute;
   left: 0; top: 3px;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--gilt);
 }
 
@@ -1393,7 +1394,7 @@ a.league-tag {
 .source-card::after  { bottom: -1px; right: -1px; border-left: none; border-top: none; }
 .source-card h3 {
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: 14px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--vellum);
@@ -1406,7 +1407,7 @@ a.league-tag {
 .source-card.source-flag h3 { color: var(--amber); }
 .source-card ul { padding-left: 18px; margin: 0; display: grid; gap: 8px; }
 .source-card li { color: var(--vellum-dim); font-size: 16px; }
-.source-card code { font-family: var(--font-mono); color: var(--gilt-bright); font-size: 13px; }
+.source-card code { font-family: var(--font-mono); color: var(--gilt-bright); font-size: 14px; }
 
 /* ---------- footer ---------- */
 .codex-footer {
@@ -1417,7 +1418,7 @@ a.league-tag {
   border-top: none;
   z-index: 2;
   font-family: var(--font-display);
-  font-size: 10.5px;
+  font-size: 11.5px;
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--vellum-dim);
@@ -1484,7 +1485,7 @@ a.league-tag {
   border: 1px solid var(--rule);
   color: var(--vellum);
   width: 32px; height: 32px;
-  font-size: 14px;
+  font-size: 15px;
   cursor: pointer;
   border-radius: 50%;
 }
@@ -1501,7 +1502,7 @@ a.league-tag {
   font-family: var(--font-headline);
   font-style: italic;
   color: var(--vellum-dim);
-  font-size: 17px;
+  font-size: 18px;
   margin: 0 0 18px;
 }
 .modal-content ul {
@@ -1522,7 +1523,7 @@ a.league-tag {
   margin: 0;
   font-family: var(--font-headline);
   font-style: italic;
-  font-size: 16px;
+  font-size: 18px;
   color: var(--vellum);
   border-left: 2px solid var(--gilt);
   padding: 10px 16px;
@@ -1536,7 +1537,7 @@ a.league-tag {
 }
 .modal-links a {
   font-family: var(--font-display);
-  font-size: 10.5px;
+  font-size: 11.5px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   padding: 6px 12px;
@@ -1598,7 +1599,7 @@ a.league-tag {
   gap: 6px;
 }
 .changes li {
-  font-size: 16px;
+  font-size: 18px;
   color: var(--vellum);
   line-height: 1.6;
 }
@@ -1751,7 +1752,7 @@ a.league-tag {
   font-family: var(--font-headline);
   font-style: italic;
   color: var(--vellum-dim);
-  font-size: 17px;
+  font-size: 18px;
   margin-bottom: 12px;
 }
 .endgame-body ul {
@@ -1784,7 +1785,7 @@ a.league-tag {
 }
 .unique-bucket-header h3 {
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: 14px;
   letter-spacing: 0.25em;
   text-transform: uppercase;
   color: var(--gilt-bright);
@@ -1792,7 +1793,7 @@ a.league-tag {
 }
 .unique-bucket-count {
   font-family: var(--font-display);
-  font-size: 10.5px;
+  font-size: 11.5px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--vellum-dim);
@@ -1801,7 +1802,7 @@ a.league-tag {
   font-family: var(--font-headline);
   font-style: italic;
   color: var(--vellum);
-  font-size: 18px;
+  font-size: 20px;
   line-height: 1.5;
   flex: 1;
 }
@@ -1846,7 +1847,7 @@ a.league-tag {
 .legacy-tile:hover { border-color: var(--gilt); }
 .legacy-name {
   font-family: var(--font-display);
-  font-size: 17px;
+  font-size: 16px;
   letter-spacing: 0.06em;
   color: #b97a3c;
   margin: 0 0 4px;
@@ -1856,12 +1857,12 @@ a.league-tag {
   font-family: var(--font-headline);
   font-style: italic;
   color: var(--vellum);
-  font-size: 16px;
+  font-size: 18px;
   margin: 0 0 4px;
 }
 .legacy-note {
   color: var(--vellum-dim);
-  font-size: 15px;
+  font-size: 16px;
   margin: 0 0 8px;
   line-height: 1.55;
 }
@@ -1904,7 +1905,7 @@ a.league-tag {
 
 @media (max-width: 780px) {
   .nav-links { gap: 0; }
-  .nav-links a { padding: 6px 6px; font-size: 10.5px; }
+  .nav-links a { padding: 6px 6px; font-size: 11.5px; }
   .codex-main { padding: 30px 18px 80px; }
   .hero { padding: 80px 18px 60px; }
   .hero-stats { gap: 14px; }
