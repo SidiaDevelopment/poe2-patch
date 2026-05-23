@@ -522,9 +522,11 @@ a:hover {
 /* ---------- content pillars ---------- */
 .content-pillars {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 18px;
 }
+@media (max-width: 980px) { .content-pillars { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) { .content-pillars { grid-template-columns: 1fr; } }
 .pillar {
   position: relative;
   padding: 26px 26px 20px;
@@ -601,11 +603,13 @@ a:hover {
 .league-card.featured::before, .league-card.featured::after {
   border-color: var(--gilt-bright);
 }
+.league-card.featured { grid-column: 1 / -1; }
 .league-card.has-img { padding-top: 0; }
 .league-img {
   margin: 0 -26px -18px;
   height: 200px;
   position: relative;
+  pointer-events: none;
 }
 .league-img img {
   width: 100%; height: 100%;
@@ -614,10 +618,55 @@ a:hover {
   mask-image: linear-gradient(180deg, #000 0%, #000 45%, transparent 100%);
   -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 45%, transparent 100%);
 }
+
+/* Featured (Runes of Aldur): full-row stacked layout — taller banner image
+   on top, bullets fanned into 2 columns under it for the wide canvas. */
+.league-card.featured .league-img { height: 360px; }
+.league-card.featured .league-img img { object-position: center 30%; }
+.league-card.featured .league-name {
+  font-size: 30px;
+  letter-spacing: 0.1em;
+  margin-top: 6px;
+}
+.league-card.featured .league-hub { font-size: 18px; margin-bottom: 20px; }
+.league-card.featured ul {
+  display: block;
+  column-count: 2;
+  column-gap: 32px;
+}
+.league-card.featured li {
+  break-inside: avoid;
+  margin-bottom: 8px;
+}
+.league-card.featured li:last-child { margin-bottom: 0; }
+@media (max-width: 780px) {
+  .league-card.featured .league-img { height: 220px; }
+  .league-card.featured ul { column-count: 1; }
+}
+
+.league-new-tag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  padding: 3px 10px;
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #b6dab1;
+  background: linear-gradient(180deg, rgba(47, 102, 48, 0.65), rgba(20, 50, 22, 0.8));
+  border: 1px solid var(--emerald-deep);
+  box-shadow: 0 0 8px var(--emerald-glow);
+  border-radius: 2px;
+  white-space: nowrap;
+  pointer-events: none;
+}
 .league-banner {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+  gap: 12px;
   margin-bottom: 6px;
 }
 .league-tag {
@@ -626,6 +675,12 @@ a:hover {
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--gilt);
+  min-width: 0;
+}
+a.league-tag {
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: auto;
 }
 .league-name {
   font-family: var(--font-display);
@@ -1190,6 +1245,8 @@ a:hover {
   grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
   gap: 18px;
 }
+.currency-grid { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 720px) { .currency-grid { grid-template-columns: 1fr; } }
 .endgame-card, .currency-card {
   position: relative;
   padding: 20px 22px;
@@ -1229,6 +1286,59 @@ a:hover {
   position: absolute;
   left: 0; top: 2px;
   font-size: 9px;
+  color: var(--gilt);
+}
+
+/* Currency cards inherit the league-mechanic look: 220px banner, bigger
+   title, ✦ bullets, more generous line-height. */
+.currency-card {
+  padding: 26px 26px 22px;
+  overflow: hidden;
+}
+.currency-card.has-img { padding-top: 0; }
+.currency-img {
+  margin: 0 -26px 18px;
+  height: 200px;
+  position: relative;
+  pointer-events: none;
+}
+.currency-img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  mask-image: linear-gradient(180deg, #000 0%, #000 50%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 50%, transparent 100%);
+}
+.currency-card h3 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vellum);
+  margin: 0 0 4px;
+}
+.currency-sub {
+  font-family: var(--font-headline);
+  font-style: italic;
+  color: var(--gilt-bright);
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+.currency-card ul {
+  display: grid;
+  gap: 10px;
+}
+.currency-card li {
+  padding-left: 18px;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--vellum);
+}
+.currency-card li::before {
+  content: "✦";
+  position: absolute;
+  left: 0; top: 3px;
+  font-size: 10px;
   color: var(--gilt);
 }
 
@@ -1317,8 +1427,8 @@ a:hover {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: url("images/presskit-web/KeyArt_Background.jpg") center 35% / cover no-repeat;
-  opacity: 0.28;
+  background: url("images/presskit-web/Act4_Cinematic.jpg") center 55% / cover no-repeat;
+  opacity: 0.45;
   mask-image: linear-gradient(180deg, transparent 0%, #000 30%, #000 70%, transparent 100%);
   -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 30%, #000 70%, transparent 100%);
   pointer-events: none;
@@ -1542,6 +1652,22 @@ a:hover {
   vertical-align: 2px;
 }
 
+/* Text-only chips (badge + label) keep the badge attached to the label so the
+   label never wraps onto its own line under a hanging badge. */
+.changes .ch-add,
+.changes .ch-rem,
+.changes .ch-rework {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+.changes .ch-add > .val,
+.changes .ch-rem > .val,
+.changes .ch-rework > .val {
+  white-space: normal;
+  min-width: 0;
+}
+
 /* Override "NEW" → "REMOVED" badge when the chip describes a removal (chip.removed === true). */
 .changes .ch-add.ch-loss::before    { content: "REMOVED"; }
 .changes .ch-rem.ch-loss::before    { content: "REMOVED"; }
@@ -1574,19 +1700,17 @@ a:hover {
 .skill-chips, .support-chips, .passive-chips, .unique-chips, .list-chips { display: none; }
 /* keep in-flow positioning (see earlier rule) */
 
-/* Endgame as full-width sections instead of a card grid */
+/* Endgame as full-width sections with a top-right photo that fades into the
+   card body (similar to the ascendancy splash treatment). */
 .endgame-feature {
-  display: grid;
-  grid-template-columns: minmax(140px, 200px) 1fr;
-  gap: 28px;
-  align-items: center;
+  position: relative;
   padding: 26px 28px;
   margin-bottom: 18px;
   background:
     radial-gradient(circle at 0% 0%, rgba(201,165,103,0.18) 0%, transparent 50%),
     linear-gradient(180deg, rgba(30, 22, 18, 0.7), rgba(18, 13, 10, 0.85));
   border: 1px solid var(--rule);
-  position: relative;
+  overflow: hidden;
 }
 .endgame-feature::before, .endgame-feature::after {
   content: "";
@@ -1594,35 +1718,27 @@ a:hover {
   width: 14px; height: 14px;
   border: 1px solid var(--gilt-dark);
   pointer-events: none;
+  z-index: 2;
 }
 .endgame-feature::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
 .endgame-feature::after  { bottom: -1px; right: -1px; border-left: none; border-top: none; }
-.endgame-art {
-  position: relative;
-  aspect-ratio: 1 / 1;
-  display: grid;
-  place-items: center;
-  background:
-    radial-gradient(circle at 50% 35%, rgba(201, 165, 103, 0.16) 0%, transparent 65%),
-    var(--obsidian-deep);
-  border: 1px solid var(--rule);
-  overflow: hidden;
-}
-.endgame-art::after {
-  content: "";
-  position: absolute; inset: 6px;
-  border: 1px solid var(--rule);
-  pointer-events: none;
-  opacity: 0.55;
-}
-.endgame-art svg { width: 70%; height: 70%; color: var(--gilt-bright); filter: drop-shadow(0 0 12px rgba(201,165,103,0.35)); }
-.endgame-art img {
-  width: 100%; height: 100%;
+.endgame-photo {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 55%;
+  max-width: 520px;
+  height: 100%;
   object-fit: cover;
-  opacity: 0.9;
-  filter: contrast(1.08) saturate(1.05);
-  mix-blend-mode: screen;
+  object-position: center;
+  opacity: 0.55;
+  filter: saturate(0.85);
+  pointer-events: none;
+  z-index: 0;
+  mask-image: linear-gradient(90deg, transparent 0%, #000 60%, #000 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 60%, #000 100%);
 }
+.endgame-body { position: relative; z-index: 1; }
 .endgame-body h3 {
   font-family: var(--font-display);
   font-size: 18px;

@@ -239,17 +239,20 @@
   D.leagues.forEach(l => {
     const ul = el("ul", null, ...l.bullets.map(b => el("li", null, b)));
     leagueRoot.appendChild(
-      el("article", { class: "league-card" + (l.featured ? " featured" : "") + (l.image ? " has-img" : "") },
+      el("article", { class: "league-card" + (l.featured ? " featured" : "") + (l.image ? " has-img" : "") + (l.isNew ? " is-new" : "") },
         l.image ? el("div", { class: "league-img" },
           el("img", { src: "images/" + l.image, alt: l.name, loading: "lazy" })
         ) : null,
-        el("div", { class: "league-banner" },
-          el("span", { class: "league-tag" }, l.tag),
-          el("a", { class: "league-tag", href: poe2dbLink(l.name), target: "_blank", rel: "noopener" }, "poe2db ↗")
-        ),
-        el("h3", { class: "league-name" }, l.name),
-        l.hub ? el("div", { class: "league-hub" }, l.hub) : null,
-        ul
+        el("div", { class: "league-body" },
+          el("div", { class: "league-banner" },
+            el("span", { class: "league-tag" }, l.tag),
+            l.isNew ? el("span", { class: "league-new-tag" }, "New") : null,
+            el("a", { class: "league-tag", href: poe2dbLink(l.name), target: "_blank", rel: "noopener" }, "poe2db ↗")
+          ),
+          el("h3", { class: "league-name" }, l.name),
+          l.hub ? el("div", { class: "league-hub" }, l.hub) : null,
+          ul
+        )
       )
     );
   });
@@ -549,7 +552,7 @@
     uniquesRoot.appendChild(intro);
 
     uniquesRoot.appendChild(renderBucket({
-      title: "PoE1 ancestor found",
+      title: "Found in PoE1",
       desc: "Exact name match on the PoE1 wiki. The PoE1 entry is linked as the legacy variant; the PoE2 0.5.0 mods are still unknown.",
       count: matched.length,
       items: matched,
@@ -582,20 +585,20 @@
     const isLegacy = !!u.legacy;
     // Image only when explicitly known (probed via poecdn). No guessing.
     const imgUrl = isLegacy && u.legacy.image ? localizeLegacyImage(u.legacy.image) : null;
-    const tile = el("div", { class: "legacy-tile " + bucketClass + (imgUrl ? " has-img" : "") },
+    const tile = el("article", { class: "unique-card unique-legacy " + bucketClass + (imgUrl ? " has-img" : "") },
       imgUrl
-        ? el("div", { class: "legacy-img" },
+        ? el("div", { class: "unique-img" },
             el("img", {
               src: imgUrl,
               alt: u.name,
               loading: "lazy",
               referrerpolicy: "no-referrer",
-              onerror: function () { this.parentNode.style.display = "none"; }
+              onerror: function () { this.parentNode.style.display = "none"; tile.classList.remove("has-img"); }
             })
           )
         : null,
-      el("div", { class: "legacy-body" },
-        el("h4", { class: "legacy-name" }, u.name),
+      el("div", { class: "unique-body" },
+        el("h3", { class: "unique-name" }, u.name),
         isLegacy && u.legacy.slot ? el("div", { class: "legacy-slot" }, u.legacy.slot) : null,
         u.legacy && u.legacy.note ? el("p", { class: "legacy-note" }, u.legacy.note) : null,
         el("div", { class: "legacy-links" },
@@ -618,15 +621,7 @@
     });
   });
 
-  // ---------- ENDGAME (full-width sections w/ inline SVG art) ----------
-  const ENDGAME_ART = {
-    "Atlas":                          svgCompass(),
-    "Waystones & Tablets":            svgTablet(),
-    "Pinnacle Bosses":                svgCrown(),
-    "Fortress / Origins of Divinity": svgTower(),
-    "Masters of the Atlas":           svgTrio(),
-    "Other Endgame":                  svgEye(),
-  };
+  // ---------- ENDGAME (full-width sections with top-left fading photo) ----------
   const ENDGAME_SUB = {
     "Atlas":                          "Fixed points of interest. Quest-driven mechanic intros. 30 new map areas. Reset, but tablets and waystones carry over.",
     "Waystones & Tablets":            "Identification required. Tablet stacking. Empty slots seed random content. Many prefix/suffix flips. New art.",
@@ -635,12 +630,23 @@
     "Masters of the Atlas":           "Doryani · Hilda · Jado. Twelve nodes each, four active at once. Re-pick at will.",
     "Other Endgame":                  "Shrine, omen and precursor tablet rebalances. New Omen of Chaotic Effectiveness. Map UI polish.",
   };
+  // Press-kit photo per endgame section. Generic atlas/UI shots stand in
+  // where there is no direct thematic match (Waystones, Other Endgame).
+  const ENDGAME_IMG = {
+    "Atlas":                          "presskit-web/Atlas_Regions_1.jpg",
+    "Waystones & Tablets":            "presskit-web/Atlas_Search_QoL.jpg",
+    "Pinnacle Bosses":                "presskit-web/Vaal_Atziri_Cinematic2.jpg",
+    "Fortress / Origins of Divinity": "presskit-web/Fortress_Atlas_2.jpg",
+    "Masters of the Atlas":           "presskit-web/Master_Doryani.jpg",
+    "Other Endgame":                  "presskit-web/Atlas_Passive_Tree.jpg",
+  };
   const eg = document.getElementById("endgame-grid");
-  eg.className = "endgame-features";  // replace the old grid layout
+  eg.className = "endgame-features";
   D.endgame.forEach(group => {
+    const imgPath = ENDGAME_IMG[group.title];
     eg.appendChild(
       el("article", { class: "endgame-feature" },
-        el("div", { class: "endgame-art" }, ENDGAME_ART[group.title] || svgRune()),
+        imgPath ? el("img", { class: "endgame-photo", src: "images/" + imgPath, alt: group.title, loading: "lazy" }) : null,
         el("div", { class: "endgame-body" },
           el("h3", null, group.title),
           el("div", { class: "endgame-sub" }, ENDGAME_SUB[group.title] || ""),
@@ -654,8 +660,12 @@
   const cur = document.getElementById("currency-grid");
   D.currency.forEach(g => {
     cur.appendChild(
-      el("article", { class: "currency-card" },
+      el("article", { class: "currency-card" + (g.image ? " has-img" : "") },
+        g.image ? el("div", { class: "currency-img" },
+          el("img", { src: "images/" + g.image, alt: g.title, loading: "lazy" })
+        ) : null,
         el("h3", null, g.title),
+        g.sub ? el("div", { class: "currency-sub" }, g.sub) : null,
         el("ul", null, ...g.items.map(i => el("li", null, i)))
       )
     );

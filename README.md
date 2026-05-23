@@ -41,6 +41,6 @@ The `.nojekyll` file disables Jekyll processing so files starting with `_` (none
 
 - The forum thread was fetched via an automated summariser; some bullets may have been compressed.
 - The 42 new uniques are listed by name only — no mod text was published in the summary.
-- Items classified as "PoE1 ancestor found" had an exact-name page on poewiki.net at capture time; the remaining 30 may still be PoE1 transfers under a different slug.
+- Items classified as "Found in PoE1" had an exact-name PoE1 unique page on poewiki.net at capture time; the remaining items may still be PoE1 transfers under a different slug.
 - The launch countdown uses 2026-05-29 20:00 UTC (1 PM PDT).
 - See the "Sources & Caveats" section at the bottom of the page for the full disclosure.

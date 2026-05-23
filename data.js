@@ -85,6 +85,7 @@ window.PATCH_DATA = {
       tag: "New Challenge League",
       hub: "Ruins of Kingsmarch · with NPC Farrow",
       featured: true,
+      isNew: true,
       image: "presskit-web/Aldur_SpiderCinematic.jpg",
       bullets: [
         "Each area contains a Remnant; craft an item via Runic Recipes — additional runeshapes add enemy waves.",
@@ -473,27 +474,29 @@ window.PATCH_DATA = {
   ],
 
   // ---------- NEW UNIQUES ----------
-  // Strict policy: an item is classified as "PoE1 ancestor found" ONLY when
-  // its exact name resolves to an existing page on https://www.poewiki.net.
+  // Strict policy: an item is classified as "Found in PoE1" ONLY when its
+  // exact name resolves to a PoE1 unique-item page on poewiki.net.
   // Everything else goes into "no PoE1 match" — no theme assumptions made.
   newUniques: [
-    // -- PoE1 ancestor found (HTTP 200 on poewiki.net for the exact name) --
-    // image: poecdn.com inventory icon URLs probed directly.
+    // -- Found in PoE1 (exact-name PoE1 unique on poewiki.net) --
+    // image: local images/poe1/<name>.png (sourced from web.poecdn.com or poewiki).
     { name: "Berek's Grip",           legacy: { slot: "Two-Stone Ring (Cold/Lightning)", note: "PoE1: Domination/Nemesis league-specific. Grants damage leech vs. Shocked/Frozen.", image: "https://web.poecdn.com/image/Art/2DItems/Rings/BereksGrip.png" } },
     { name: "Berek's Pass",           legacy: { slot: "Two-Stone Ring (Fire/Cold)", note: "PoE1: 5000 Armour while Frozen, damage while Ignited.", image: "https://web.poecdn.com/image/Art/2DItems/Rings/BereksPass.png" } },
     { name: "Berek's Respite",        legacy: { slot: "Two-Stone Ring (Fire/Lightning)", note: "PoE1: Killing Shocked/Ignited enemies spreads the ailment.", image: "https://web.poecdn.com/image/Art/2DItems/Rings/BereksRespite.png" } },
-    { name: "Brutus' Lead Sprinkler", legacy: { slot: "Sceptre (Ritual)", note: "PoE1: Brutus-themed boss-drop." } },
-    { name: "Duality",                legacy: { slot: "Unknown · verify on poewiki", note: "PoE1 page exists for this name — confirm whether it's the same item." } },
-    { name: "Facebreaker",            legacy: { slot: "Gloves (Strapped Mitts)", note: "PoE1: classic unarmed-build staple." } },
-    { name: "Geofri's Sanctuary",     legacy: { slot: "Body Armour (Elegant Ringmail)", note: "PoE1: grants Zealot's Oath keystone." } },
+    { name: "Brutus' Lead Sprinkler", legacy: { slot: "Sceptre (Ritual)", note: "PoE1: Brutus-themed boss-drop.", image: "images/poe1/BrutusLeadSprinkler.png" } },
+    { name: "Facebreaker",            legacy: { slot: "Gloves (Strapped Mitts)", note: "PoE1: classic unarmed-build staple.", image: "images/poe1/Facebreaker.png" } },
+    { name: "Geofri's Sanctuary",     legacy: { slot: "Body Armour (Elegant Ringmail)", note: "PoE1: grants Zealot's Oath keystone.", image: "images/poe1/GeofrisSanctuary.png" } },
     { name: "Loreweave",              legacy: { slot: "Body Armour (Elegant Ringmail)", note: "PoE1: max-resists rolling unique.", image: "https://web.poecdn.com/image/Art/2DItems/Armours/BodyArmours/Loreweave.png" } },
     { name: "Mageblood",              legacy: { slot: "Heavy Belt", note: "PoE1: iconic top-tier belt; magic flask effects.", image: "https://web.poecdn.com/image/Art/2DItems/Belts/InjectorBelt.png" } },
-    { name: "Redemption",             legacy: { slot: "Unknown · verify on poewiki", note: "PoE1 page exists for this name — confirm whether it's the same item." } },
-    { name: "Split Personality",      legacy: { slot: "Cobalt Jewel", note: "PoE1: attribute trade-off based on socket positioning." } },
-    { name: "Voices",                 legacy: { slot: "Large Cluster Jewel", note: "PoE1: splits passive small nodes." } },
+    { name: "Split Personality",      legacy: { slot: "Crimson Jewel", note: "PoE1: attribute trade-off based on socket positioning.", image: "images/poe1/SplitPersonality.png" } },
+    { name: "Voices",                 legacy: { slot: "Large Cluster Jewel", note: "PoE1: trades passive points for extra Jewel Sockets — far fewer passives, far more socket density.", image: "images/poe1/Voices.png" } },
 
     // -- No PoE1 entry found (poewiki returned 404 for the exact name) --
     // No assumption made about whether these are new or renamed.
+    // "Duality" and "Redemption" share a name with a PoE1 divination card and
+    // notable passive respectively — neither is a PoE1 unique ancestor.
+    { name: "Duality" },
+    { name: "Redemption" },
     { name: "Cat O' Nine Tails" },
     { name: "Decree of Acuity" },
     { name: "Decree of Flight" },
@@ -578,18 +581,18 @@ window.PATCH_DATA = {
 
   // ---------- CURRENCY ----------
   currency: [
-    { title: "Currency Drop Rates", items: [
+    { title: "Currency Drop Rates", sub: "Greater Orbs scarcer · Divines easier · level gates loosened", image: "presskit-web/Inscribe_Runic_Symbols.jpg", items: [
       "Divine Orbs are now more common.",
       "Greater / Perfect currencies somewhat rarer; Transmutation & Augmentation significantly rarer.",
       "Greater Orbs of Transmutation/Augmentation: min mod level 44 (was 55); now drop from Act 4.",
       "Fate of the Vaal Currency items now stack to 5,000.",
     ]},
-    { title: "Corruption", items: [
+    { title: "Corruption", sub: "Value-aware randomisation · Omen of Corruption retired", image: "presskit-web/Vaal_CorruptionAltar_Cinematic.jpg", items: [
       "Corruption that randomises modifier values now multiplies each modifier based on current value.",
       "Sanctifying multiplies modifier value based on current value.",
       "Omen of Corruption can no longer be obtained.",
     ]},
-    { title: "New Crafting Systems", items: [
+    { title: "New Crafting Systems", sub: "Verisium Runeforging · Genesis Tree · Liquid Emotions · Catalysts", image: "presskit-web/GenesisTreeCinematic.jpg", items: [
       "Verisium Runeforging (Runes of Aldur) — upgrade Unique base types.",
       "Genesis Tree (Breach) — craft new ring/amulet/belt bases from Wombgifts and Hiveblood.",
       "Liquid Emotions (Delirium) — craft additional mods on Jewels.",
@@ -597,7 +600,7 @@ window.PATCH_DATA = {
       "Catalysts: no longer drop from monsters; 12 new Catalysts add quality mods to Jewels.",
       "Alternate Quality items now salvageable for partial Catalyst return.",
     ]},
-    { title: "New Currency Items", items: [
+    { title: "New Currency Items", sub: "Each new league mechanic brings its own currency stream", image: "presskit-web/Remnant.jpg", items: [
       "Verisium metal (Runes of Aldur).",
       "13 Alloy currencies (Runes of Aldur).",
       "3 Fluxes — transform resistances (Runes of Aldur).",
