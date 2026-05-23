@@ -353,21 +353,9 @@
     skillRoot.innerHTML = "";
     let list = [...D.skills];
     const q = (document.getElementById("skills-search").value || "").toLowerCase().trim();
-    const activeKinds = new Set(
-      [...document.querySelectorAll(".nav-filter .filter-chip input")]
-        .filter(i => i.checked)
-        .map(i => i.closest(".filter-chip").dataset.filter)
-    );
 
     if (q) list = list.filter(s => s.name.toLowerCase().includes(q) || s.tag.toLowerCase().includes(q));
 
-    list = list.filter(s => {
-      if (s.kind === "buff"    && !activeKinds.has("buff")) return false;
-      if (s.kind === "nerf"    && !activeKinds.has("nerf")) return false;
-      if (s.kind === "neutral" && !activeKinds.has("neutral")) return false;
-      if (s.kind === "mixed"   && !(activeKinds.has("buff") || activeKinds.has("nerf"))) return false;
-      return true;
-    });
 
     if (skillSort === "alpha") list.sort((a, b) => a.name.localeCompare(b.name));
     if (skillSort === "buffs") {
@@ -438,10 +426,6 @@
       skillSort = btn.dataset.sort;
       renderSkills();
     });
-  });
-
-  document.querySelectorAll(".nav-filter .filter-chip input").forEach(input => {
-    input.addEventListener("change", renderSkills);
   });
 
   // ---------- SUPPORTS ----------
@@ -518,7 +502,7 @@
   }
 
   function reworkCard(u, overall) {
-    const card = el("article", { class: "unique-card" + (u.image ? " has-img" : "") },
+    const card = el("article", { class: "unique-card " + cardKindClass(u.chips) + (u.image ? " has-img" : "") },
       kindMark(overall)
     );
     if (u.image) {
