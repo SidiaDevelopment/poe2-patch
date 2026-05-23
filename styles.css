@@ -1417,7 +1417,22 @@ a:hover {
   box-shadow: 0 0 6px var(--crimson-glow);
   vertical-align: 2px;
 }
-.changes .ch-rework::before { content: "↻ "; color: var(--gilt); font-size: 11px; margin-right: 4px; }
+.changes .ch-rework::before {
+  content: "REWORKED";
+  display: inline-block;
+  background: linear-gradient(180deg, rgba(130, 107, 61, 0.55), rgba(50, 40, 22, 0.7));
+  color: #f3d28a;
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  padding: 1px 6px;
+  border-radius: 2px;
+  margin-right: 8px;
+  border: 1px solid var(--gilt-dark);
+  box-shadow: 0 0 6px rgba(201, 139, 63, 0.25);
+  vertical-align: 2px;
+}
 
 /* Override "NEW" → "REMOVED" badge when the chip describes a removal (chip.removed === true). */
 .changes .ch-add.ch-loss::before    { content: "REMOVED"; }

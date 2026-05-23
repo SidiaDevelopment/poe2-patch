@@ -102,7 +102,10 @@
           li.appendChild(el("span", { class: "val val-down" }, text));
         } else {
           li.className = "ch-rework" + lossClass;
-          li.appendChild(el("span", { class: "val val-mute" }, text));
+          // "reworked" text is now redundant with the REWORKED badge — skip it.
+          if (text.toLowerCase() !== "reworked") {
+            li.appendChild(el("span", { class: "val val-mute" }, text));
+          }
         }
       }
       ul.appendChild(li);
