@@ -202,7 +202,7 @@ window.PATCH_DATA = {
       name: "Martial Artist",
       cls: "Monk",
       mark: "M",
-      classIcon: "ui/IconDexIntFourb_Monk2",
+      classIcon: "ui/IconDexIntFourb_Monk1",
       splash: "presskit-web/Martial_Artist_Ascendancy_Art.jpg",
       isNew: true,
       changes: [
@@ -259,7 +259,7 @@ window.PATCH_DATA = {
       name: "Gemling Legionnaire",
       cls: "Mercenary",
       mark: "G",
-      classIcon: "ui/IconStrDexFourb_Mercenary2",
+      classIcon: "ui/IconStrDexFourb_Mercenary3",
       changes: [
         { name: "Crystalline Potential", desc: "Removed.", chip: { kind: "nerf", text: "removed" } },
         { name: "Essence of Virtue (new)", desc: "Grants Virtuous Barrier — a glittering barrier accumulating gemstone Motes of each Attribute; loses a random Mote when hit.", chip: { kind: "buff", text: "+ new" } },
