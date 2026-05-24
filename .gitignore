@@ -7,3 +7,24 @@ Thumbs.db
 # Raw GGG presskit (10-15 MB each, ~535 MB total). Only the resized
 # images/presskit-web/ copies are checked in and served to GitHub Pages.
 images/presskit/
+
+# Raw passive-tree JSON from RePoE-fork (3 MB). Pre-processed into
+# tree-data.json which is what the site actually loads.
+tree-source.json
+# Official GGG tree export (1.8 MB). Source for the group-background
+# spritesheet crop only; not loaded at runtime.
+tree-official.json
+_icon-list.txt
+_stat_passive.json
+_stat_general.json
+
+# PoB2 0.4 tree export (1.8 MB) + GitHub tree listing — sources for the
+# ascendancy-art extraction. The lean pipeline that consumes them lives in
+# _tools/ and produces tree-art.js + images/tree-ui/asc/ (both checked in).
+_pob2-tree.json
+_pttree.json
+_tools/node_modules/
+_tools/dds/
+_tools/_*.png
+_tools/pob_*.lua
+_tools/package-lock.json

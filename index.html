@@ -10,7 +10,6 @@
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="parchment-grain"></div>
 
   <!-- TOP NAV -->
   <nav class="codex-nav" aria-label="Section navigation">
@@ -25,6 +24,7 @@
       <li><a href="#skills">Skills</a></li>
       <li><a href="#supports">Supports</a></li>
       <li><a href="#passives">Passives</a></li>
+      <li><a href="#passive-tree">Tree</a></li>
       <li><a href="#uniques">Uniques</a></li>
       <li><a href="#endgame">Endgame</a></li>
       <li><a href="#currency">Currency</a></li>
@@ -131,6 +131,26 @@
       </header>
       <div class="passive-callouts" id="passive-callouts"></div>
       <div class="passive-grid" id="passive-grid"></div>
+    </section>
+
+    <!-- PASSIVE SKILL TREE (full interactive) -->
+    <section id="passive-tree" class="codex-section">
+      <header class="section-header">
+        <div class="section-sigil">VI*</div>
+        <h2>Passive Skill Tree</h2>
+        <p class="section-subtitle">The full PoE2 tree. Drag to pan, scroll to zoom, hover a notable or keystone for its name and stats.</p>
+      </header>
+      <div class="tree-shell">
+        <div class="tree-controls">
+          <button class="tree-btn" data-tree="zoom-in" aria-label="Zoom in">+</button>
+          <button class="tree-btn" data-tree="zoom-out" aria-label="Zoom out">−</button>
+          <button class="tree-btn" data-tree="reset" aria-label="Reset view">Reset</button>
+        </div>
+        <div class="tree-viewport" id="tree-viewport">
+          <div class="tree-status" id="tree-status">Loading the tree…</div>
+        </div>
+        <div class="tree-tooltip" id="tree-tooltip" hidden></div>
+      </div>
     </section>
 
     <!-- UNIQUES -->
@@ -250,6 +270,8 @@
   </div>
 
   <script src="data.js"></script>
+  <script src="tree-data.js"></script>
+  <script src="tree-art.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

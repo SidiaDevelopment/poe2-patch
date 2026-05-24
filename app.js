@@ -800,6 +800,303 @@
       <path d="M50 22 L50 78 M30 32 L70 68 M30 68 L70 32" />`);
   }
 
+  // ---------- PASSIVE SKILL TREE RENDERER ----------
+  (function initPassiveTree() {
+    const viewport = document.getElementById("tree-viewport");
+    const status = document.getElementById("tree-status");
+    const tooltip = document.getElementById("tree-tooltip");
+    if (!viewport || !status) return;
+
+    const tree = window.TREE_DATA;
+    if (!tree || !tree.nodes) {
+      status.textContent = "Could not load the tree";
+      return;
+    }
+    status.classList.add("hidden");
+
+    const ICON_BASE = "images/passives/";
+    const [minX, minY, maxX, maxY] = tree.bounds;
+    const pad = 200;
+    const vbMinX = minX - pad;
+    const vbMinY = minY - pad;
+    const vbWidth  = (maxX - minX) + 2 * pad;
+    const vbHeight = (maxY - minY) + 2 * pad;
+    const viewBox = `${vbMinX} ${vbMinY} ${vbWidth} ${vbHeight}`;
+
+
+    const KIND_CLASS = ["plain", "notable", "keystone", "jewel", "icon-only"];
+    const KIND_R     = [16, 38, 60, 44, 22];
+    const KIND_ICON_SIZE = [0, 56, 80, 0, 32];
+    const ROOT_R = 70;
+    // Skip decorative / unused nodes:
+    //  - kind 4 = is_icon_only (decorative anchor, no allocatable effect)
+    //  - nodes with no stats AND not a structural node (root/jewel/notable/keystone)
+    function isVisible(n) {
+      if (n.root) return true;
+      if (n.k === 4) return false;
+      if (n.k === 1 || n.k === 2 || n.k === 3) return true; // notable / keystone / jewel
+      // Plain nodes: keep only if they actually have stats/descriptions.
+      return Array.isArray(n.d) && n.d.length > 0;
+    }
+    const visibleIds = new Set();
+    Object.entries(tree.nodes).forEach(([id, n]) => { if (isVisible(n)) visibleIds.add(id); });
+
+    // Edges: skip any whose endpoints are filtered out, and any that cross
+    // between the main tree and an ascendancy cluster (or between two
+    // different ascendancies — these are the "weird" long-distance edges
+    // from class starting nodes to ascendancy-specific subtrees).
+    // Spline-driven curving following PoB's logic:
+    //  • spline = 2147483647 → straight line.
+    //  • spline = 0 + same group + same orbit → arc with radius = orbit
+    //    radius of the endpoints. Use cross-product for the sweep flag
+    //    (since spline gives no sign hint at 0).
+    //  • spline ≠ 0 → arc with radius = orbit_radii[abs(spline)]; sign
+    //    chooses sweep direction.
+    const orbits = tree.orbits || [];
+    const groups = tree.groups || {};
+    function edgeSvgFor(na, nb, spline) {
+      const SPLINE_STRAIGHT = 2147483647;
+      if (spline === SPLINE_STRAIGHT) {
+        return `<line class="tree-edge" x1="${na.x}" y1="${na.y}" x2="${nb.x}" y2="${nb.y}"/>`;
+      }
+      let r, sweep;
+      if (spline === 0) {
+        if (!(na.g && na.g === nb.g && na.o === nb.o && na.o > 0)) {
+          return `<line class="tree-edge" x1="${na.x}" y1="${na.y}" x2="${nb.x}" y2="${nb.y}"/>`;
+        }
+        r = orbits[na.o];
+        const grp = groups[na.g];
+        const cross = (nb.x - na.x) * (grp.y - na.y) - (nb.y - na.y) * (grp.x - na.x);
+        sweep = cross > 0 ? 1 : 0;
+      } else {
+        r = orbits[Math.abs(spline)];
+        if (!r) return `<line class="tree-edge" x1="${na.x}" y1="${na.y}" x2="${nb.x}" y2="${nb.y}"/>`;
+        sweep = spline > 0 ? 0 : 1;
+      }
+      return `<path class="tree-edge" d="M${na.x},${na.y} A${r},${r} 0 0,${sweep} ${nb.x},${nb.y}"/>`;
+    }
+    const edgeSvg = tree.edges.map(e => {
+      const [a, b, sp] = e;
+      const spline = (sp == null) ? 0 : sp;
+      if (!visibleIds.has(String(a)) || !visibleIds.has(String(b))) return "";
+      const na = tree.nodes[a]; const nb = tree.nodes[b];
+      if (!na || !nb) return "";
+      // Cross-realm filter: main tree ↔ ascendancy, or two different ascendancies.
+      const aAsc = na.a || null;
+      const bAsc = nb.a || null;
+      if (aAsc !== bAsc) return "";
+      return edgeSvgFor(na, nb, spline);
+    }).join("");
+
+    // Group cluster backgrounds — the official PoE2 textures, cropped from
+    // GGG's own tree spritesheet (web.poecdn.com/image/passive-skill/
+    // group-background-4.png) via the official tree export's groupBackground
+    // sprite coords. These are the subtle dark smoky halos the game uses,
+    // NOT PoE1's ornate gold filigree:
+    //   bg-small      PSGroupBackground1 (small cluster, orbit 1)
+    //   bg-medium     PSGroupBackground2 (medium cluster, orbits 2/7)
+    //   bg-large-half PSGroupBackground3 (large, top half; orbits 3+).
+    // GGG selects the tier by the group's outermost occupied orbit. RePoE
+    // carries no per-group background field, so we pick the tier from the
+    // group's outer-orbit radius and scale the texture to encompass the
+    // cluster (+padding). The large texture is a half-circle (2:1), so a full
+    // backdrop is its top copy + a vertically-mirrored bottom copy.
+    const TREE_UI = "images/tree-ui/";
+    const bgSvg = Object.values(groups).map(g => {
+      if ((g.n || 0) < 2 || !g.r) return "";   // skip joints / single-node hubs
+      const R = g.r * 1.22;                     // bg radius just beyond outer orbit
+      const file = g.r > 335 ? "bg-large-half.webp"
+                 : g.r > 162 ? "bg-medium.webp"
+                 :             "bg-small.webp";
+      if (file === "bg-large-half.webp") {
+        const top = `<image class="tree-group-bg" href="${TREE_UI}${file}" x="${g.x - R}" y="${g.y - R}" width="${2 * R}" height="${R}"/>`;
+        const bot = `<image class="tree-group-bg" href="${TREE_UI}${file}" x="${g.x - R}" y="${g.y - R}" width="${2 * R}" height="${R}" transform="matrix(1 0 0 -1 0 ${2 * g.y})"/>`;
+        return top + bot;
+      }
+      return `<image class="tree-group-bg" href="${TREE_UI}${file}" x="${g.x - R}" y="${g.y - R}" width="${2 * R}" height="${2 * R}"/>`;
+    }).join("");
+    const defsSvg = "";
+
+    // Ascendancy artwork — the official PoE2 illustrations decoded from GGG's
+    // own BC7 tree textures (PoB2 0.4 export): one circular "wheel" behind each
+    // ascendancy node cluster, plus the big ornate ring (BGTree) at the tree
+    // centre. TREE_ART carries each piece's centre + span in tree-coordinate
+    // units (see tree-art.js, generated by _tools/extract.js). Drawn deepest so
+    // node frames, icons and group halos sit on top.
+    const ART = window.TREE_ART || { wheels: [], center: null };
+    const artImg = (a, cls) =>
+      `<image class="${cls}" href="images/tree-ui/${a.file}" x="${a.x - a.size / 2}" y="${a.y - a.size / 2}" width="${a.size}" height="${a.size}" preserveAspectRatio="xMidYMid meet"/>`;
+    const artSvg =
+      (ART.center ? artImg(ART.center, "tree-center-ring") : "") +
+      (ART.wheels || []).map(w => artImg(w, "tree-asc-wheel")).join("");
+
+    // Each node is rendered as: <image frame> + <image icon> + invisible
+    // hit-circle (for hover/click and as a visual fallback when textures fail).
+    const BG_BASE = "images/tree-ui/";
+    const FRAME = {
+      1: { file: "frame-notable.webp",  size: 124, icon: 56 },
+      2: { file: "frame-keystone.webp", size: 178, icon: 80 },
+      3: { file: "frame-jewel.webp",    size: 104, icon: 0  },
+    };
+    const PLAIN_FRAME = { file: "frame-passive.webp", size: 56, icon: 0 };
+    const ROOT_FRAME  = { file: "frame-keystone.webp", size: 200, icon: 90 };
+
+    const nodeSvg = Object.entries(tree.nodes).map(([id, n]) => {
+      if (!visibleIds.has(id)) return "";
+      const isRoot = !!n.root;
+      const cls = isRoot ? "root" : KIND_CLASS[n.k];
+      const frame = isRoot ? ROOT_FRAME : (FRAME[n.k] || PLAIN_FRAME);
+      const hitR = isRoot ? ROOT_R : KIND_R[n.k];
+      const halfFrame = frame.size / 2;
+      const frameImg = `<image class="tree-node-frame" href="${BG_BASE}${frame.file}" x="${-halfFrame}" y="${-halfFrame}" width="${frame.size}" height="${frame.size}"/>`;
+      const wantsIcon = (n.k === 1 || n.k === 2 || isRoot) && n.i && frame.icon > 0;
+      const iconImg = wantsIcon
+        ? `<image class="tree-node-icon" href="${ICON_BASE}${n.i}.webp" x="${-frame.icon/2}" y="${-frame.icon/2}" width="${frame.icon}" height="${frame.icon}"/>`
+        : "";
+      return `<g class="tree-node-group ${cls}" data-id="${id}" transform="translate(${n.x},${n.y})">${frameImg}${iconImg}<circle class="tree-node-hit" r="${hitR}"/></g>`;
+    }).join("");
+
+    viewport.insertAdjacentHTML("beforeend", `<svg id="tree-svg" viewBox="${viewBox}" preserveAspectRatio="xMidYMid meet">${defsSvg}<g class="tree-pan"><g class="tree-art">${artSvg}</g><g class="tree-bgs">${bgSvg}</g><g class="tree-edges">${edgeSvg}</g><g class="tree-nodes">${nodeSvg}</g></g></svg>`);
+
+    const svg = viewport.querySelector("svg");
+    const panG = viewport.querySelector(".tree-pan");
+    let scale = 1, tx = 0, ty = 0;
+    function applyTransform() { panG.setAttribute("transform", `translate(${tx} ${ty}) scale(${scale})`); }
+
+    // SVG units per screen pixel — needed so a 1-pixel mouse move actually
+    // pans by 1 pixel on screen rather than 1 SVG unit (which is ~1/38 px).
+    function svgPerPixel() {
+      const rect = svg.getBoundingClientRect();
+      return vbWidth / Math.max(1, rect.width);
+    }
+    function clientToSvg(clientX, clientY) {
+      const rect = svg.getBoundingClientRect();
+      const r = vbWidth / Math.max(1, rect.width);
+      return {
+        x: vbMinX + (clientX - rect.left) * r,
+        y: vbMinY + (clientY - rect.top) * r,
+      };
+    }
+
+    // Pan + pinch-zoom via pointer events (covers mouse, touch, stylus).
+    const pointers = new Map();
+    let pinch = null; // { dist, midX, midY, baseScale, baseTx, baseTy }
+
+    viewport.addEventListener("pointerdown", (e) => {
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      try { viewport.setPointerCapture(e.pointerId); } catch (_) {}
+      viewport.classList.add("dragging");
+      if (pointers.size === 2) {
+        const pts = Array.from(pointers.values());
+        pinch = {
+          dist: Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y),
+          midX: (pts[0].x + pts[1].x) / 2,
+          midY: (pts[0].y + pts[1].y) / 2,
+          baseScale: scale, baseTx: tx, baseTy: ty,
+        };
+      }
+    });
+    viewport.addEventListener("pointermove", (e) => {
+      if (!pointers.has(e.pointerId)) return;
+      const last = pointers.get(e.pointerId);
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pointers.size === 2 && pinch) {
+        const pts = Array.from(pointers.values());
+        const newDist = Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y);
+        if (newDist > 0 && pinch.dist > 0) {
+          const factor = newDist / pinch.dist;
+          const next = Math.max(0.15, Math.min(12,pinch.baseScale * factor));
+          const c = clientToSvg(pinch.midX, pinch.midY);
+          tx = pinch.baseTx + (pinch.baseScale - next) * c.x;
+          ty = pinch.baseTy + (pinch.baseScale - next) * c.y;
+          scale = next;
+          applyTransform();
+        }
+      } else if (pointers.size === 1) {
+        const r = svgPerPixel();
+        tx += (e.clientX - last.x) * r;
+        ty += (e.clientY - last.y) * r;
+        applyTransform();
+      }
+    });
+    const endPointer = (e) => {
+      if (!pointers.has(e.pointerId)) return;
+      try { viewport.releasePointerCapture(e.pointerId); } catch (_) {}
+      pointers.delete(e.pointerId);
+      if (pointers.size < 2) pinch = null;
+      if (pointers.size === 0) viewport.classList.remove("dragging");
+    };
+    viewport.addEventListener("pointerup", endPointer);
+    viewport.addEventListener("pointercancel", endPointer);
+
+    // Cursor-anchored zoom: keep the SVG point under the cursor fixed.
+    // Transform: P' = tx + scale*P  ⇒  newTx = tx + (scale - newScale)*P
+    function zoomAt(clientX, clientY, factor) {
+      const next = Math.max(0.15, Math.min(12,scale * factor));
+      const c = clientToSvg(clientX, clientY);
+      tx = tx + (scale - next) * c.x;
+      ty = ty + (scale - next) * c.y;
+      scale = next;
+      applyTransform();
+    }
+
+    // Wheel zoom, anchored on the cursor.
+    viewport.addEventListener("wheel", (e) => {
+      e.preventDefault();
+      zoomAt(e.clientX, e.clientY, e.deltaY > 0 ? 0.88 : 1.12);
+    }, { passive: false });
+
+    // Buttons
+    viewport.parentNode.querySelectorAll(".tree-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const action = btn.dataset.tree;
+        const rect = viewport.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        if (action === "zoom-in") zoomAt(centerX, centerY, 1.25);
+        else if (action === "zoom-out") zoomAt(centerX, centerY, 0.8);
+        else if (action === "reset") { scale = 1; tx = 0; ty = 0; applyTransform(); }
+      });
+    });
+
+    // Tooltip
+    function escapeHtml(s) {
+      return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+    function showTooltip(id, clientX, clientY) {
+      const n = tree.nodes[id];
+      if (!n) return;
+      const KIND_LABEL = ["", "Notable", "Keystone", "Jewel Socket", "Cluster"];
+      const kindLabel = n.root ? "Class Start" : KIND_LABEL[n.k];
+      const stats = (n.d || []).map(s => `<div class="tt-line">${escapeHtml(s)}</div>`).join("");
+      const flav = n.f ? `<div class="tt-flav">${escapeHtml(n.f)}</div>` : "";
+      tooltip.innerHTML = `${kindLabel ? `<div class="tt-kind">${kindLabel}${n.a ? " · " + escapeHtml(n.a) : ""}</div>` : ""}<div class="tt-name">${escapeHtml(n.n || "")}</div>${stats}${flav}`;
+      tooltip.hidden = false;
+      positionTooltip(clientX, clientY);
+    }
+    function positionTooltip(clientX, clientY) {
+      const rect = viewport.getBoundingClientRect();
+      let x = clientX - rect.left + 18;
+      let y = clientY - rect.top + 18;
+      const tw = tooltip.offsetWidth || 320;
+      const th = tooltip.offsetHeight || 80;
+      if (x + tw > rect.width) x = clientX - rect.left - tw - 18;
+      if (y + th > rect.height) y = clientY - rect.top - th - 18;
+      tooltip.style.left = x + "px";
+      tooltip.style.top = y + "px";
+    }
+    viewport.addEventListener("pointerover", (e) => {
+      const grp = e.target.closest(".tree-node-group");
+      if (!grp) { tooltip.hidden = true; return; }
+      showTooltip(grp.dataset.id, e.clientX, e.clientY);
+    });
+    viewport.addEventListener("pointermove", (e) => {
+      if (tooltip.hidden) return;
+      positionTooltip(e.clientX, e.clientY);
+    });
+    viewport.addEventListener("pointerleave", () => { tooltip.hidden = true; });
+  })();
+
   // ---------- MOBILE NAV TOGGLE ----------
   const navEl = document.querySelector(".codex-nav");
   const navToggle = navEl && navEl.querySelector(".nav-toggle");
