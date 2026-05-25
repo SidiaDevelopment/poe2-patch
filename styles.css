@@ -1470,6 +1470,99 @@ a.league-tag {
   font-size: 22px;
 }
 
+/* Full-width currency card whose item list flows in two columns. */
+.currency-card.cols-2 { grid-column: 1 / -1; }
+.currency-card.cols-2 ul { columns: 2; column-gap: 34px; }
+.currency-card.cols-2 li { break-inside: avoid; }
+@media (max-width: 720px) { .currency-card.cols-2 ul { columns: 1; } }
+
+/* Dated "[25 May]" update tag, rendered inline after integrated patch-note text. */
+.upd-tag {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 7px 2px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gilt-bright);
+  background: rgba(201, 165, 103, 0.12);
+  border: 1px solid var(--rule-strong);
+  border-radius: 2px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* ---------- patch-note updates + site changelog ---------- */
+.updates-log, .changelog-log {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.log-group {
+  background: rgba(20, 14, 10, 0.55);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--gilt-dark);
+  padding: 18px 22px 20px;
+}
+.log-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 11px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--rule);
+}
+.log-date {
+  font-family: var(--font-display);
+  font-size: 18px;
+  letter-spacing: 0.05em;
+  color: var(--gilt-bright);
+}
+.log-count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--vellum-dim);
+  white-space: nowrap;
+}
+.log-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.log-items li {
+  position: relative;
+  padding-left: 20px;
+  color: var(--vellum);
+  line-height: 1.55;
+}
+.log-items li::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 0.6em;
+  width: 6px;
+  height: 6px;
+  background: var(--gilt-dark);
+  transform: rotate(45deg);
+}
+.log-items li.sub {
+  margin-left: 20px;
+  color: var(--vellum-dim);
+  font-size: 0.95em;
+}
+.log-items li.sub::before {
+  background: transparent;
+  border: 1px solid var(--gilt-dark);
+}
+
 /* ---------- sources ---------- */
 .codex-sources { margin-top: 80px; }
 .sources-grid {

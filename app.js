@@ -51,6 +51,15 @@
     return e;
   }
 
+  // Render a trailing "[25 May]"-style marker in a string as a small dated tag.
+  // Returns an array of children (text + optional <span class="upd-tag">) that
+  // el() flattens. Strings without a marker pass through unchanged.
+  function tagText(str) {
+    if (typeof str !== "string") return [str];
+    const m = str.match(/^(.*?)\s*\[([^\]]+)\]\s*$/);
+    return m ? [m[1], el("span", { class: "upd-tag" }, m[2])] : [str];
+  }
+
   // ---------- KIND BADGE (single overall indicator per card) ----------
   // Maps `kind` to a glyph and CSS class.
   function kindMark(kind, opts = {}) {
@@ -465,7 +474,7 @@
             el("h4", { class: "support-name" }, s.name)
           )
         ),
-        s.desc ? el("p", null, s.desc) : null,
+        s.desc ? el("p", null, tagText(s.desc)) : null,
         changeLines(s.chips)
       )
     );
@@ -534,7 +543,7 @@
     }
     const body = el("div", { class: "unique-body" },
       el("h3", { class: "unique-name" }, u.name),
-      u.desc ? el("p", null, u.desc) : null,
+      u.desc ? el("p", null, tagText(u.desc)) : null,
       changeLines(u.chips)
     );
     card.appendChild(body);
@@ -668,7 +677,7 @@
         el("div", { class: "endgame-body" },
           el("h3", null, group.title),
           el("div", { class: "endgame-sub" }, ENDGAME_SUB[group.title] || ""),
-          el("ul", null, ...group.items.map(i => el("li", null, i)))
+          el("ul", null, ...group.items.map(i => el("li", null, tagText(i))))
         )
       )
     );
@@ -678,13 +687,13 @@
   const cur = document.getElementById("currency-grid");
   D.currency.forEach(g => {
     cur.appendChild(
-      el("article", { class: "currency-card" + (g.image ? " has-img" : "") },
+      el("article", { class: "currency-card" + (g.image ? " has-img" : "") + (g.cols2 ? " cols-2" : "") },
         g.image ? el("div", { class: "currency-img" },
           el("img", { src: "images/" + g.image, alt: g.title, loading: "lazy", fetchpriority: "low" })
         ) : null,
         el("h3", null, g.title),
         g.sub ? el("div", { class: "currency-sub" }, g.sub) : null,
-        el("ul", null, ...g.items.map(i => el("li", null, i)))
+        el("ul", null, ...g.items.map(i => el("li", null, tagText(i))))
       )
     );
   });
@@ -694,7 +703,7 @@
     const overall = row.kind || "neutral";
     return el("div", { class: "list-row has-" + overall },
       kindMark(overall),
-      el("div", { class: "list-text" }, row.text)
+      el("div", { class: "list-text" }, tagText(row.text))
     );
   }
 
@@ -707,6 +716,29 @@
   const rem = document.getElementById("removed-list");
   D.removed.forEach(r => rem.appendChild(listRow(r, true)));
 
+  // ---------- PATCH NOTE UPDATES + SITE CHANGELOG ----------
+  // Both render the same shape: dated groups, each with a bulleted item list.
+  function renderLog(containerId, groups) {
+    const root = document.getElementById(containerId);
+    if (!root || !groups) return;
+    groups.forEach(g => {
+      root.appendChild(
+        el("article", { class: "log-group" },
+          el("div", { class: "log-head" },
+            el("span", { class: "log-date" }, g.date),
+            el("span", { class: "log-count" }, g.items.length + (g.items.length === 1 ? " change" : " changes"))
+          ),
+          el("ul", { class: "log-items" }, ...g.items.map(t => {
+            const sub = t.startsWith("— ");
+            return el("li", { class: sub ? "sub" : null }, sub ? t.slice(2) : t);
+          }))
+        )
+      );
+    });
+  }
+  renderLog("updates-log", D.patchUpdates);
+  renderLog("changelog-log", D.siteChangelog);
+
   // ---------- MODAL ----------
   const modal = document.getElementById("modal");
   const modalContent = document.getElementById("modal-content");
@@ -716,7 +748,7 @@
     modalContent.appendChild(el("h2", null, title));
     if (sub) modalContent.appendChild(el("div", { class: "modal-sub" }, sub));
     if (bullets && bullets.length) {
-      modalContent.appendChild(el("ul", null, ...bullets.map(b => el("li", null, b))));
+      modalContent.appendChild(el("ul", null, ...bullets.map(b => el("li", null, tagText(b)))));
     }
     if (links && links.length) {
       modalContent.appendChild(
