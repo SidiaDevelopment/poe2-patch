@@ -7,3 +7,28 @@ Thumbs.db
 # Raw GGG presskit (10-15 MB each, ~535 MB total). Only the resized
 # images/presskit-web/ copies are checked in and served to GitHub Pages.
 images/presskit/
+
+# OFFICIAL GGG PoE2 tree export (github.com/grindinggear/poe2-skilltree-export)
+# — the authoritative source. _ggg-tree.json = data.json (nodes have precomputed
+# x/y + explicit edges); _ggg-assets/ = the sprite-sheet atlases (skills, frame,
+# group-background, mastery-effect, line, class backgrounds) + their coord JSONs.
+# Build inputs, not loaded raw at runtime. Supersedes the PoB2 fork below.
+_ggg-tree.json
+_ggg-assets/
+# PoB2 0.4 fork — prior source; superseded by the official GGG export above.
+_pob2-tree.json
+# Reference data, no longer consumed by the build:
+#   tree-source.json   — RePoE-fork (original geometry lineage of tree-data.json)
+#   tree-official.json — PoE1 tree
+#   _pttree.json       — PoE1 tree GitHub listing
+tree-source.json
+tree-official.json
+_pttree.json
+_icon-list.txt
+_stat_passive.json
+_stat_general.json
+_tools/node_modules/
+_tools/dds/
+_tools/_*.png
+_tools/pob_*.lua
+_tools/package-lock.json

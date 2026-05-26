@@ -1,0 +1,1 @@
+{"name":"poe2-dds-tools","version":"1.0.0","private":true,"dependencies":{"fzstd":"^0.1.1","parse-dds":"^1.2.1","pngjs":"^7.0.0","puppeteer":"^25.0.4","sharp":"^0.34.5"}}

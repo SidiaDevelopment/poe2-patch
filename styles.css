@@ -38,6 +38,7 @@ html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
+  position: relative;
   font-family: var(--font-body);
   font-size: 17px;
   line-height: 1.6;
@@ -51,13 +52,18 @@ body {
   overflow-x: hidden;
 }
 
-/* Grain overlay across the entire page */
+/* Grain overlay across the entire page.
+   NOTE: this used to be `position: fixed` + `mix-blend-mode: overlay`, which
+   forced the browser to re-blend the whole viewport on every scroll frame —
+   it made the page feel almost impossible to scroll. It's now an absolutely
+   positioned, normal-blend layer that scrolls with the page, so the
+   compositor can scroll cheaply. Kept faint so it still reads as texture. */
 .parchment-grain {
-  position: fixed; inset: 0;
+  position: absolute; inset: 0;
+  height: 100%;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.07;
-  mix-blend-mode: overlay;
+  opacity: 0.04;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='4'/><feColorMatrix values='0 0 0 0 0.85 0 0 0 0 0.7 0 0 0 0 0.5 0 0 0 0.7 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 }
 
@@ -81,10 +87,11 @@ a:hover {
   align-items: center;
   gap: 18px;
   padding: 10px 22px;
-  background: linear-gradient(180deg, rgba(10,8,7,0.97), rgba(10,8,7,0.88));
+  /* Solid (not translucent) bg so we don't need backdrop-filter: blur — that
+     blur re-rendered on every scroll frame and tanked scroll performance. */
+  background: linear-gradient(180deg, #0a0807, #0c0a08);
   border-bottom: 1px solid var(--rule-strong);
   box-shadow: 0 4px 24px rgba(0,0,0,0.6);
-  backdrop-filter: blur(6px);
 }
 .nav-mark {
   font-family: var(--font-display);
@@ -1213,6 +1220,248 @@ a.league-tag {
 }
 .passive-desc { font-size: 16px; color: var(--vellum-dim); margin: 0 0 8px; }
 .passive-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+
+/* ---------- passive skill tree (full renderer) ---------- */
+.tree-shell {
+  position: relative;
+  background: linear-gradient(180deg, rgba(8, 6, 5, 0.9), rgba(15, 11, 8, 0.9));
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 14px;
+}
+.tree-shell::before, .tree-shell::after {
+  content: "";
+  position: absolute;
+  width: 14px; height: 14px;
+  border: 1px solid var(--gilt-dark);
+  pointer-events: none;
+  z-index: 3;
+}
+.tree-shell::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+.tree-shell::after  { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+/* Ascendancy selector — overlaid inside the canvas, top-left. */
+.tree-asc-bar {
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tree-asc-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gilt);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+}
+.tree-asc-select {
+  box-sizing: border-box;
+  height: 36px;
+  max-width: 300px;
+  background: rgba(15, 11, 8, 0.85);
+  border: 1px solid var(--rule-strong);
+  color: var(--gilt-bright);
+  font-family: var(--font-body, inherit);
+  font-size: 13px;
+  padding: 0 10px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: border-color 180ms, background 180ms;
+}
+.tree-asc-select:hover { border-color: var(--gilt); background: rgba(30, 22, 18, 0.95); }
+.tree-asc-select:focus { outline: none; border-color: var(--gilt-bright); }
+.tree-asc-select optgroup { background: #120d0a; color: var(--gilt); font-style: normal; }
+.tree-asc-select option { background: #120d0a; color: #e7dcc6; }
+@media (max-width: 560px) {
+  .tree-asc-label { display: none; }
+  .tree-asc-select { max-width: 180px; }
+}
+.tree-controls {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tree-btn {
+  width: 36px; height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 11, 8, 0.85);
+  border: 1px solid var(--rule-strong);
+  color: var(--gilt-bright);
+  font-family: var(--font-display);
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: border-color 180ms, background 180ms;
+}
+.tree-btn[data-tree="reset"] { width: auto; padding: 0 12px; font-size: 11px; letter-spacing: 0.18em; }
+.tree-btn:hover { border-color: var(--gilt); background: rgba(30, 22, 18, 0.95); }
+.tree-viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 11;
+  background: radial-gradient(ellipse at center, rgba(20, 14, 10, 0.4) 0%, rgba(5, 4, 3, 0.95) 80%);
+  border: 1px solid var(--rule);
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+}
+.tree-viewport.dragging { cursor: grabbing; }
+/* Fullscreen: the shell fills the screen and the viewport grows to fit. */
+.tree-shell:fullscreen, .tree-shell:-webkit-full-screen {
+  width: 100vw; height: 100vh; padding: 0; background: #06060a;
+}
+.tree-shell:fullscreen .tree-viewport, .tree-shell:-webkit-full-screen .tree-viewport {
+  aspect-ratio: auto; width: 100%; height: 100%; border: none;
+}
+.tree-canvas {
+  display: block;
+  width: 100%; height: 100%;
+  user-select: none;
+  touch-action: none;
+}
+.tree-status {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--vellum-dim);
+  pointer-events: none;
+}
+.tree-status.hidden { display: none; }
+
+/* SVG element styling */
+.tree-group-bg { pointer-events: none; }
+/* Type-themed "active effect" pattern behind notables/masteries: faint by
+   default, lit to near-full when its node is hovered (as in PoB2). */
+.tree-fx { pointer-events: none; opacity: 0.14; }
+.tree-fx.lit { opacity: 0.92; }
+/* Ascendancy wheel + centre artwork (decoded from PoB2's BC7 textures). */
+.tree-asc-wheel, .tree-center-ring, .tree-class-mid, .tree-center-active { pointer-events: none; }
+.tree-asc-wheel { opacity: 0.92; }
+.tree-center-ring { opacity: 0.85; }
+.tree-class-mid { opacity: 0.85; }      /* picked class portrait in the middle */
+.tree-center-active { opacity: 0.8; }   /* active-class wedge highlight behind it */
+/* Conditional ("paths not taken") connections + nodes: only available with the
+   Oracle (Druid) ascendancy. Drawn blue, as PoB2 marks them. */
+.tree-edge.cond { stroke: rgba(80, 160, 255, 0.85); stroke-width: 9; }
+.tree-node-group.cond .tree-node-frame { filter: drop-shadow(0 0 5px rgba(90, 150, 230, 0.9)); }
+.tree-node-group.cond .tree-node-icon { filter: drop-shadow(0 0 3px rgba(90, 150, 230, 0.8)); }
+.tree-edge {
+  stroke: rgba(122, 100, 60, 0.55);
+  stroke-width: 7;
+  fill: none;
+  pointer-events: none;
+}
+.tree-node-frame, .tree-node-icon { pointer-events: none; }
+.tree-node-hit {
+  fill: transparent;   /* invisible — just a hit target for pointer events */
+  stroke: none;
+}
+.tree-node-group { cursor: pointer; }
+/* Ascendancy start node — the named entry node at each wheel. Its data icon is
+   a placeholder, so we seat it on a dark disc ringed in gilt (drawn on the
+   otherwise-invisible hit circle) so it reads clearly over the busy wheel art. */
+.tree-node-group.asc-start .tree-node-frame {
+  filter: drop-shadow(0 0 9px rgba(214, 178, 110, 0.85));
+}
+.tree-node-group.asc-start .tree-node-hit {
+  fill: rgba(18, 14, 9, 0.45);
+  stroke: rgba(214, 178, 110, 0.9);
+  stroke-width: 6;
+}
+.tree-node-group.asc-start:hover .tree-node-hit {
+  stroke: rgba(245, 214, 150, 1);
+}
+.tree-node-group:hover .tree-node-frame {
+  filter: drop-shadow(0 0 8px rgba(201, 165, 103, 0.8));
+}
+.tree-node-group:hover .tree-node-icon {
+  filter: drop-shadow(0 0 6px rgba(255, 220, 150, 0.6));
+}
+
+/* Tooltip */
+.tree-tooltip {
+  position: absolute;
+  z-index: 5;
+  max-width: 320px;
+  padding: 12px 16px;
+  background: linear-gradient(180deg, rgba(28, 20, 16, 0.97), rgba(15, 11, 8, 0.97));
+  border: 1px solid var(--gilt-dark);
+  color: var(--vellum);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  border-radius: 3px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  transition: opacity 120ms;
+}
+.tree-tooltip[hidden] { display: none; }
+.tree-tooltip .tt-name {
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gilt-bright);
+  margin: 0 0 6px;
+}
+.tree-tooltip .tt-kind {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--vellum-dim);
+  margin-bottom: 6px;
+}
+.tree-tooltip .tt-stat {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--vellum-dim);
+  margin: 2px 0;
+}
+.tree-tooltip .tt-line {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--vellum);
+  line-height: 1.3;
+  margin: 0 0 9px;        /* clear gap between stats; wrapped lines stay tight */
+  padding-left: 12px;
+  text-indent: -12px;     /* hanging indent so wrapped lines align past the bullet */
+}
+.tree-tooltip .tt-line::before {
+  content: "›";
+  color: var(--gilt);
+  margin-right: 7px;
+}
+.tree-tooltip .tt-line:last-child { margin-bottom: 0; }
+.tree-tooltip .tt-flav {
+  font-family: var(--font-headline);
+  font-style: italic;
+  color: var(--vellum-dim);
+  font-size: 13px;
+  margin-top: 8px;
+}
+/* Inline loca tokens: [Key|Display] keywords and {granted skill} names.
+   No underline — we can't surface the keyword definitions, so an underline would
+   falsely imply more info. Just a subtle colour to mark game terms. */
+.tree-tooltip .tt-kw { color: var(--gilt); }
+.tree-tooltip .tt-ul { color: var(--gilt-bright); }
 
 /* ---------- uniques ---------- */
 /* Tabs: segmented control inside a gilt-cornered frame. */
