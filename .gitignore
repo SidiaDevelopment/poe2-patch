@@ -8,21 +8,20 @@ Thumbs.db
 # images/presskit-web/ copies are checked in and served to GitHub Pages.
 images/presskit/
 
-# Raw passive-tree JSON from RePoE-fork (3 MB). Pre-processed into
-# tree-data.json which is what the site actually loads.
+# Sole build input for _tools/build-tree.js (source of truth; not loaded at
+# runtime — the generated tree-data.js / tree-art.js / images/tree-ui/ ARE
+# checked in). NOTE: map node→group via group.nodes, not the node.group field.
+_pob2-tree.json
+# Reference data, no longer consumed by the build:
+#   tree-source.json   — RePoE-fork (original geometry lineage of tree-data.json)
+#   tree-official.json — PoE1 tree
+#   _pttree.json       — PoE1 tree GitHub listing
 tree-source.json
-# Official GGG tree export (1.8 MB). Source for the group-background
-# spritesheet crop only; not loaded at runtime.
 tree-official.json
+_pttree.json
 _icon-list.txt
 _stat_passive.json
 _stat_general.json
-
-# PoB2 0.4 tree export (1.8 MB) + GitHub tree listing — sources for the
-# ascendancy-art extraction. The lean pipeline that consumes them lives in
-# _tools/ and produces tree-art.js + images/tree-ui/asc/ (both checked in).
-_pob2-tree.json
-_pttree.json
 _tools/node_modules/
 _tools/dds/
 _tools/_*.png

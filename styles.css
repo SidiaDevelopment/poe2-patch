@@ -1274,10 +1274,29 @@ a.league-tag {
   touch-action: none;
 }
 .tree-viewport.dragging { cursor: grabbing; }
+/* Fullscreen: the shell fills the screen and the viewport grows to fit. */
+.tree-shell:fullscreen, .tree-shell:-webkit-full-screen {
+  width: 100vw; height: 100vh; padding: 0; background: #06060a;
+}
+.tree-shell:fullscreen .tree-viewport, .tree-shell:-webkit-full-screen .tree-viewport {
+  aspect-ratio: auto; width: 100%; height: 100%; border: none;
+}
 .tree-viewport svg {
   width: 100%; height: 100%;
   display: block;
   user-select: none;
+}
+/* Plain passives are drawn as lightweight dots (level-of-detail), not framed
+   images — keeps the DOM ~3k elements smaller. The dot is its own hit target. */
+.tree-node-dot {
+  fill: rgba(150, 132, 96, 0.55);
+  stroke: rgba(201, 165, 103, 0.5);
+  stroke-width: 4;
+  cursor: pointer;
+}
+.tree-node-dot:hover {
+  fill: rgba(214, 178, 110, 0.95);
+  stroke: rgba(245, 220, 160, 0.95);
 }
 .tree-status {
   position: absolute;
@@ -1296,10 +1315,21 @@ a.league-tag {
 
 /* SVG element styling */
 .tree-group-bg { pointer-events: none; }
-/* Ascendancy artwork (decoded from GGG's official PoE2 tree textures). */
-.tree-asc-wheel, .tree-center-ring { pointer-events: none; }
+/* Type-themed "active effect" pattern behind notables/masteries: faint by
+   default, lit to near-full when its node is hovered (as in PoB2). */
+.tree-fx { pointer-events: none; opacity: 0.14; }
+.tree-fx.lit { opacity: 0.92; }
+/* Ascendancy wheel + centre artwork (decoded from PoB2's BC7 textures). */
+.tree-asc-wheel, .tree-center-ring, .tree-class-mid, .tree-center-active { pointer-events: none; }
 .tree-asc-wheel { opacity: 0.92; }
 .tree-center-ring { opacity: 0.85; }
+.tree-class-mid { opacity: 0.85; }      /* picked class portrait in the middle */
+.tree-center-active { opacity: 0.8; }   /* active-class wedge highlight behind it */
+/* Conditional ("paths not taken") connections + nodes: only available with the
+   Oracle (Druid) ascendancy. Drawn blue, as PoB2 marks them. */
+.tree-edge.cond { stroke: rgba(80, 160, 255, 0.85); stroke-width: 9; }
+.tree-node-group.cond .tree-node-frame { filter: drop-shadow(0 0 5px rgba(90, 150, 230, 0.9)); }
+.tree-node-group.cond .tree-node-icon { filter: drop-shadow(0 0 3px rgba(90, 150, 230, 0.8)); }
 .tree-edge {
   stroke: rgba(122, 100, 60, 0.55);
   stroke-width: 7;
@@ -1312,6 +1342,20 @@ a.league-tag {
   stroke: none;
 }
 .tree-node-group { cursor: pointer; }
+/* Ascendancy start node — the named entry node at each wheel. Its data icon is
+   a placeholder, so we seat it on a dark disc ringed in gilt (drawn on the
+   otherwise-invisible hit circle) so it reads clearly over the busy wheel art. */
+.tree-node-group.asc-start .tree-node-frame {
+  filter: drop-shadow(0 0 9px rgba(214, 178, 110, 0.85));
+}
+.tree-node-group.asc-start .tree-node-hit {
+  fill: rgba(18, 14, 9, 0.45);
+  stroke: rgba(214, 178, 110, 0.9);
+  stroke-width: 6;
+}
+.tree-node-group.asc-start:hover .tree-node-hit {
+  stroke: rgba(245, 214, 150, 1);
+}
 .tree-node-group:hover .tree-node-frame {
   filter: drop-shadow(0 0 8px rgba(201, 165, 103, 0.8));
 }

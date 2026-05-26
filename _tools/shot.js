@@ -66,9 +66,9 @@ server.listen(0, async () => {
     const v = await page.$("#tree-viewport");
     await v.screenshot({ path: path.join(__dirname, "_shot_" + name + ".png") });
   }
-  await crop("pathfinder", 16195, 6938, 5200);
+  await crop("pathfinder", 14160, 6304, 4200);
   await crop("center", 0, 0, 6000);
-  await crop("lich", 5087, -18332, 5200);
+  await crop("titan", -11524, 10366, 4200);
 
   await browser.close();
   server.close();
