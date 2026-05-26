@@ -298,8 +298,8 @@
   </div>
 
   <script src="data.js"></script>
-  <script src="tree-data.js"></script>
-  <script src="tree-sprites.js"></script>
+  <!-- tree-data.js + tree-sprites.js (~2 MB) are loaded on demand by app.js
+       when the passive-tree section nears the viewport (see deferPassiveTree). -->
   <script src="app.js"></script>
 </body>
 </html>

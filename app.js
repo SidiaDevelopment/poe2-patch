@@ -836,7 +836,7 @@
   // ---------- PASSIVE SKILL TREE — canvas renderer ----------
   // One <canvas> drawing sprite crops from the official GGG atlases (the
   // maxroll/poeplanner approach) — far faster than the old ~20k-element SVG.
-  (function initPassiveTree() {
+  function initPassiveTree() {
     const viewport = document.getElementById("tree-viewport");
     const status = document.getElementById("tree-status");
     const tooltip = document.getElementById("tree-tooltip");
@@ -1143,6 +1143,38 @@
     window.addEventListener("resize", resize);
     document.addEventListener("fullscreenchange", resize);
     resize(); homeView();
+  }
+
+  // Lazy-load the tree: its data + sprite atlases are ~2 MB and the section sits
+  // near the bottom of the page, so defer fetching them (and running the renderer)
+  // until the section nears the viewport. Users who never scroll there pay nothing.
+  (function deferPassiveTree() {
+    const section = document.getElementById("passive-tree");
+    if (!section) return;
+    const loadScript = (src) => new Promise((res, rej) => {
+      const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = rej;
+      document.body.appendChild(s);
+    });
+    let started = false;
+    async function start() {
+      if (started) return; started = true;
+      try {
+        if (!window.TREE_DATA) await loadScript("tree-data.js");
+        if (!window.TREE_SPRITES) await loadScript("tree-sprites.js");
+        initPassiveTree();
+      } catch (e) {
+        const st = document.getElementById("tree-status");
+        if (st) st.textContent = "Could not load the tree";
+      }
+    }
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver((entries) => {
+        if (entries.some((e) => e.isIntersecting)) { io.disconnect(); start(); }
+      }, { rootMargin: "600px" });   // begin loading a little before it scrolls in
+      io.observe(section);
+    } else {
+      start();   // no IO support → just load it
+    }
   })();
 
   // ---------- MOBILE NAV TOGGLE ----------
