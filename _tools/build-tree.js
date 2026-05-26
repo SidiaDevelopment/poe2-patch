@@ -145,11 +145,18 @@ for (const c of d.classes) {
   if (items.length) ascByClass.push({ cls: c.name, items });
 }
 
+// Picked class offset (for rotating the active ring to its start socket when no
+// ascendancy is selected — the "None / class portrait" case).
+const pickedCls = d.classes.find((c) => c.name.toLowerCase() === PICKED.toLowerCase());
+const pickedAsc = pickedCls && (pickedCls.ascendancies || []).find((a) => a.offsetX != null);
+
 const treeData = {
   bounds: [d.min_x, d.min_y, d.max_x, d.max_y],
   nodes: out, edges, groups,
   // centre art: picked class base portrait (Class0, cropped below) + the ornate ring.
-  centre: { img: "images/tree/asc/centre.webp", ring: "startNode:MainCircle", ringActive: "startNode:MainCircleActive" },
+  // ox/oy = the picked class's wheel offset, so the active ring points at it by default.
+  centre: { img: "images/tree/asc/centre.webp", ring: "startNode:MainCircle", ringActive: "startNode:MainCircleActive",
+    ox: pickedAsc ? +pickedAsc.offsetX.toFixed(1) : 0, oy: pickedAsc ? +pickedAsc.offsetY.toFixed(1) : 0 },
   asc: ascByClass, ascMeta,
 };
 const json = JSON.stringify(treeData);

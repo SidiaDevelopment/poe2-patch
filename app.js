@@ -985,7 +985,16 @@
         const il = selectedAsc ? ascIllustration(selectedAsc) : loadImg(tree.centre.img);
         if (il) ctx.drawImage(il, -ASC_ART / 2, -ASC_ART / 2, ASC_ART, ASC_ART);
         spriteBox("groupBg", tree.centre.ring, 0, 0, ASC_RING, ASC_RING, 0.95);
-        if (tree.centre.ringActive) spriteBox("groupBg", tree.centre.ringActive, 0, 0, ASC_RING, ASC_RING, 0.9);
+        if (tree.centre.ringActive) {
+          // The active ring's gold socket sits at the top by default (Witch/Sorc start).
+          // Rotate it to the selected class's start direction (= negated wheel offset),
+          // which lands on the matching socket of the 6-socket base ring.
+          const rm = selectedAsc ? ascMeta[selectedAsc] : tree.centre;
+          const rot = rm && rm.ox != null ? Math.atan2(-rm.oy, -rm.ox) + Math.PI / 2 : 0;
+          ctx.save(); ctx.rotate(rot);
+          spriteBox("groupBg", tree.centre.ringActive, 0, 0, ASC_RING, ASC_RING, 0.9);
+          ctx.restore();
+        }
       }
       // Oracle "paths not taken" (blue) — nodes AND their cluster backgrounds are
       // hidden unless the Oracle is selected
