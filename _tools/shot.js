@@ -1,4 +1,4 @@
-// Serve the project root and screenshot the passive tree for visual QA.
+// Serve the project root and screenshot the passive tree (canvas) for visual QA.
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
@@ -30,45 +30,45 @@ server.listen(0, async () => {
   page.on("pageerror", e => errs.push("PAGEERR: " + e.message));
   await page.goto(`http://localhost:${port}/index.html`, { waitUntil: "networkidle0", timeout: 60000 });
 
-  // Reveal the passive tree section (nav anchor) and wait for the SVG.
   await page.evaluate(() => {
-    const el = document.getElementById("tree-viewport") || document.querySelector("#passive-tree, [id*='tree']");
+    const el = document.getElementById("tree-viewport");
     if (el) el.scrollIntoView();
   });
-  await page.waitForSelector("#tree-svg", { timeout: 30000 }).catch(() => {});
-  await new Promise(r => setTimeout(r, 1500));
+  await page.waitForSelector(".tree-canvas", { timeout: 30000 }).catch(() => {});
+  // let the atlas images load + redraw
+  await new Promise(r => setTimeout(r, 2500));
 
-  const info = await page.evaluate(() => {
-    const svg = document.getElementById("tree-svg");
-    return {
-      hasSvg: !!svg,
-      wheels: document.querySelectorAll(".tree-asc-wheel").length,
-      ring: document.querySelectorAll(".tree-center-ring").length,
-      art: !!window.TREE_ART,
-      vb: svg ? svg.getAttribute("viewBox") : null,
-    };
-  });
-  console.log("INFO", JSON.stringify(info), "ERRS", errs.slice(0, 5));
+  const info = await page.evaluate(() => ({
+    hasCanvas: !!document.querySelector(".tree-canvas"),
+    data: !!window.TREE_DATA, sprites: !!window.TREE_SPRITES,
+    nodes: window.TREE_DATA ? Object.keys(window.TREE_DATA.nodes).length : 0,
+    edges: window.TREE_DATA ? window.TREE_DATA.edges.length : 0,
+  }));
+  console.log("INFO", JSON.stringify(info), "ERRS", errs.slice(0, 6));
 
   const vp = await page.$("#tree-viewport");
   if (vp) await vp.screenshot({ path: path.join(__dirname, "_shot_tree_full.png") });
 
-  // Zoom crops: override the SVG viewBox to a square region around a point.
-  await page.setViewport({ width: 900, height: 900, deviceScaleFactor: 1 });
-  async function crop(name, cx, cy, span) {
-    await page.evaluate((cx, cy, span) => {
-      const svg = document.getElementById("tree-svg");
-      const pan = svg.querySelector(".tree-pan");
-      if (pan) pan.setAttribute("transform", "translate(0 0) scale(1)");
-      svg.setAttribute("viewBox", `${cx - span / 2} ${cy - span / 2} ${span} ${span}`);
-    }, cx, cy, span);
+  // Zoom into the centre by scrolling the wheel over the viewport middle.
+  if (vp) {
+    const box = await vp.boundingBox();
+    const cx = box.x + box.width / 2, cy = box.y + box.height / 2;
+    await page.mouse.move(cx, cy);
+    for (let i = 0; i < 8; i++) { await page.mouse.wheel({ deltaY: -300 }); await new Promise(r => setTimeout(r, 60)); }
     await new Promise(r => setTimeout(r, 600));
-    const v = await page.$("#tree-viewport");
-    await v.screenshot({ path: path.join(__dirname, "_shot_" + name + ".png") });
+    await vp.screenshot({ path: path.join(__dirname, "_shot_center.png") });
   }
-  await crop("pathfinder", 14160, 6304, 4200);
-  await crop("center", 0, 0, 6000);
-  await crop("titan", -11524, 10366, 4200);
+
+  // Select an ascendancy via the dropdown → it should focus the centred wheel.
+  for (const asc of ["Ranger3", "Witch1", "Monk3"]) {
+    await page.evaluate(id => {
+      const s = document.getElementById("tree-asc-select");
+      s.value = id; s.dispatchEvent(new Event("change"));
+    }, asc);
+    await new Promise(r => setTimeout(r, 700));
+    const v = await page.$("#tree-viewport");
+    if (v) await v.screenshot({ path: path.join(__dirname, "_shot_asc_" + asc + ".png") });
+  }
 
   await browser.close();
   server.close();

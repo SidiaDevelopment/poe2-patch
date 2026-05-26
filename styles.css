@@ -1239,12 +1239,53 @@ a.league-tag {
 }
 .tree-shell::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
 .tree-shell::after  { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+/* Ascendancy selector — overlaid inside the canvas, top-left. */
+.tree-asc-bar {
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tree-asc-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gilt);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+}
+.tree-asc-select {
+  box-sizing: border-box;
+  height: 36px;
+  max-width: 300px;
+  background: rgba(15, 11, 8, 0.85);
+  border: 1px solid var(--rule-strong);
+  color: var(--gilt-bright);
+  font-family: var(--font-body, inherit);
+  font-size: 13px;
+  padding: 0 10px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: border-color 180ms, background 180ms;
+}
+.tree-asc-select:hover { border-color: var(--gilt); background: rgba(30, 22, 18, 0.95); }
+.tree-asc-select:focus { outline: none; border-color: var(--gilt-bright); }
+.tree-asc-select optgroup { background: #120d0a; color: var(--gilt); font-style: normal; }
+.tree-asc-select option { background: #120d0a; color: #e7dcc6; }
+@media (max-width: 560px) {
+  .tree-asc-label { display: none; }
+  .tree-asc-select { max-width: 180px; }
+}
 .tree-controls {
   position: absolute;
   top: 22px;
   right: 22px;
   z-index: 4;
   display: flex;
+  align-items: center;
   gap: 6px;
 }
 .tree-btn {
@@ -1281,22 +1322,11 @@ a.league-tag {
 .tree-shell:fullscreen .tree-viewport, .tree-shell:-webkit-full-screen .tree-viewport {
   aspect-ratio: auto; width: 100%; height: 100%; border: none;
 }
-.tree-viewport svg {
-  width: 100%; height: 100%;
+.tree-canvas {
   display: block;
+  width: 100%; height: 100%;
   user-select: none;
-}
-/* Plain passives are drawn as lightweight dots (level-of-detail), not framed
-   images — keeps the DOM ~3k elements smaller. The dot is its own hit target. */
-.tree-node-dot {
-  fill: rgba(150, 132, 96, 0.55);
-  stroke: rgba(201, 165, 103, 0.5);
-  stroke-width: 4;
-  cursor: pointer;
-}
-.tree-node-dot:hover {
-  fill: rgba(214, 178, 110, 0.95);
-  stroke: rgba(245, 220, 160, 0.95);
+  touch-action: none;
 }
 .tree-status {
   position: absolute;
@@ -1409,8 +1439,17 @@ a.league-tag {
   font-family: var(--font-body);
   font-size: 14px;
   color: var(--vellum);
-  margin: 3px 0;
+  line-height: 1.3;
+  margin: 0 0 9px;        /* clear gap between stats; wrapped lines stay tight */
+  padding-left: 12px;
+  text-indent: -12px;     /* hanging indent so wrapped lines align past the bullet */
 }
+.tree-tooltip .tt-line::before {
+  content: "›";
+  color: var(--gilt);
+  margin-right: 7px;
+}
+.tree-tooltip .tt-line:last-child { margin-bottom: 0; }
 .tree-tooltip .tt-flav {
   font-family: var(--font-headline);
   font-style: italic;
@@ -1418,6 +1457,11 @@ a.league-tag {
   font-size: 13px;
   margin-top: 8px;
 }
+/* Inline loca tokens: [Key|Display] keywords and {granted skill} names.
+   No underline — we can't surface the keyword definitions, so an underline would
+   falsely imply more info. Just a subtle colour to mark game terms. */
+.tree-tooltip .tt-kw { color: var(--gilt); }
+.tree-tooltip .tt-ul { color: var(--gilt-bright); }
 
 /* ---------- uniques ---------- */
 /* Tabs: segmented control inside a gilt-cornered frame. */

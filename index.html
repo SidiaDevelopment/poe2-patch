@@ -141,6 +141,10 @@
         <p class="section-subtitle">The full PoE2 tree. Drag to pan, scroll to zoom, hover a notable or keystone for its name and stats.</p>
       </header>
       <div class="tree-shell">
+        <div class="tree-asc-bar" id="tree-asc-bar">
+          <label class="tree-asc-label" for="tree-asc-select">Ascendancy</label>
+          <select class="tree-asc-select" id="tree-asc-select" aria-label="Choose an ascendancy to view in the centre"></select>
+        </div>
         <div class="tree-controls">
           <button class="tree-btn" data-tree="zoom-in" aria-label="Zoom in">+</button>
           <button class="tree-btn" data-tree="zoom-out" aria-label="Zoom out">−</button>
@@ -272,7 +276,7 @@
 
   <script src="data.js"></script>
   <script src="tree-data.js"></script>
-  <script src="tree-art.js"></script>
+  <script src="tree-sprites.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

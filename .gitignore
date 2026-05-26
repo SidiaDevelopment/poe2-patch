@@ -8,9 +8,14 @@ Thumbs.db
 # images/presskit-web/ copies are checked in and served to GitHub Pages.
 images/presskit/
 
-# Sole build input for _tools/build-tree.js (source of truth; not loaded at
-# runtime — the generated tree-data.js / tree-art.js / images/tree-ui/ ARE
-# checked in). NOTE: map node→group via group.nodes, not the node.group field.
+# OFFICIAL GGG PoE2 tree export (github.com/grindinggear/poe2-skilltree-export)
+# — the authoritative source. _ggg-tree.json = data.json (nodes have precomputed
+# x/y + explicit edges); _ggg-assets/ = the sprite-sheet atlases (skills, frame,
+# group-background, mastery-effect, line, class backgrounds) + their coord JSONs.
+# Build inputs, not loaded raw at runtime. Supersedes the PoB2 fork below.
+_ggg-tree.json
+_ggg-assets/
+# PoB2 0.4 fork — prior source; superseded by the official GGG export above.
 _pob2-tree.json
 # Reference data, no longer consumed by the build:
 #   tree-source.json   — RePoE-fork (original geometry lineage of tree-data.json)
