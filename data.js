@@ -755,6 +755,14 @@ window.PATCH_DATA = {
   // ---------- SITE CHANGELOG (changes to this codex page, newest first) ----------
   siteChangelog: [
     {
+      date: "26 May 2026",
+      items: [
+        `Added a full interactive Passive Skill Tree — the complete PoE2 0.5 tree rendered on a single canvas, built from GGG's official skill-tree export, with drag-to-pan, scroll-to-zoom, fullscreen, and hover tooltips for every node, notable and keystone.`,
+        `Added an ascendancy selector that centres any ascendancy's wheel over its official illustration — including the new Martial Artist and Spirit Walker — framed by the class ring, with themed cluster backgrounds that light up on hover and the Druid Oracle's conditional "paths not taken" shown in blue.`,
+        `The tree's data and artwork (~2 MB) load on demand only when you scroll to that section, so the rest of the page stays light.`,
+      ],
+    },
+    {
       date: "25 May 2026",
       items: [
         `Added a Patch Note Updates section carrying GGG's official post-release updates (22 & 25 May 2026).`,
